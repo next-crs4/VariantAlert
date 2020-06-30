@@ -40,7 +40,7 @@ make EMAIL_HOST=smtp.yourserver.com \
 ```
 
 4 - Point your browser to: 
-`http://0.0.0.0:8000
+`http://0.0.0.0:8000`
  
  
 #### Other commands
