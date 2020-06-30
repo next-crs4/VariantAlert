@@ -1,0 +1,42 @@
+ <!-- templates/variants/query.multiples.html -->
+<div class="center py-3 px-4 bg-default" >
+    <div class="row">
+        <div class="form-group col-sm-4">
+            <label class="col-form-label text-primary" for="{{ form.csv_label.id_for_label }}">
+                {{ form.csv_label.label }}
+            </label>
+            <input  type="text" class="form-control form-control-sm border-info" 
+                    placeholder="{{ form.csv_label.help_text }}" 
+                    id="{{ form.csv_label.id_for_label }}" name="{{ form.csv_label.name }}">
+            <small class="form-text text-warning">
+                {{ form.csv_label.help_text | safe }}
+            </small>
+            {% for error in form.csv_label.errors %}
+            <div class="alert alert-dismissible alert-danger mt-2">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Please, be careful!</strong><br>{{ error }}
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group col-sm-8">
+            <label class="col-form-label text-primary" for="{{ form.csv_file.id_for_label }}">
+              {{ form.csv_file.label }}  
+            </label>
+            <input type="file" class="form-control-file" aria-describedby="fileHelp" 
+                id="{{ form.csv_file.id_for_label }}" name="{{ form.csv_file.name }}">
+
+            <small class="form-text text-warning">
+                {{ form.csv_file.help_text | safe }}
+            </small>
+            {% for error in form.csv_file.errors %}
+            <div class="alert alert-dismissible alert-danger mt-2">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Please, be careful!</strong><br>{{ error }}
+            </div>
+            {% endfor %}
+ 
+        </div>
+    </div>
+</div>
+

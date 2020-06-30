@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+<div class="w-100" style="margin-top:3rem;">
+    <h1 class="text-right text-primary">About</h1>
+    <hr class="my-4">
+    <ul class="nav nav-tabs bg-default border-bottom border-info">
+        <li class="nav-item border-info">
+            <a class="nav-link active" data-toggle="tab" href="#abstract">Abstract</a>
+        </li>
+        <li class="nav-item border-info">
+            <a class="nav-link" data-toggle="tab" href="#annotations">Available Annotations</a>
+        </li>
+        <li class="nav-item border-info">
+            <a class="nav-link" data-toggle="tab" href="#source">Source Code</a>
+        </li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade show active" id="abstract">
+            {% include "about/abstract.html" %}
+        </div>
+        <div class="tab-pane fade" id="annotations">
+            {% include "about/annotations.html" %}
+        </div>
+        <div class="tab-pane fade" id="source">
+            {% include "about/source.html" %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

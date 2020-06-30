@@ -1,0 +1,106 @@
+<!-- templates/variants/details.html -->
+{% extends 'base.html' %}
+
+{% block title %}Details{% endblock %}
+
+{% block content %}
+{% if request.user.id == query.user_id %}
+<div class='row mt-2 mb-5'>
+    <div class="card border-info" style="width:60rem;">
+        <div class="card-header border-bottom border-info">
+            <div class="row col-md-12">
+                <div class="col-md-4 text-left">
+                    <h4>{{ query.label }}</h4>
+                    <h6>{{ query.query }}</h6>
+                </div>
+                <div class="col-md-4 text-center">
+                    <h5>Created</h5>
+                    <h5>{{ query.date }}</h5>
+                </div>
+                <div class="col-md-4 text-right">
+                    <h5>Changed</h5>
+                    <h5>{{ query.update }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table text-center border border-primary">
+                <tr class="table-primary">
+                    <th scope="row" class="border-bottom border-primary">Assembly</th>
+                    <td class="border-bottom border-primary">Chromosome</td>
+                    <td class="border-bottom border-primary">Position</td>
+                    <td class="border-bottom border-primary">Reference</td>
+                    <td class="border-bottom border-primary">Alternate</td>
+                </tr>
+                <tr class="table-light">
+                    <td>{{ query.assembly }}</td>
+                    <td>{{ query.chromosome }}</td>
+                    <td>{{ query.position }}</td>
+                    <td>{{ query.variant_ref }}</td>
+                    <td>{{ query.variant_alt }}</td>
+                </tr>
+            </table>
+
+            <div class="card-text border border-primary mt-3">
+                <ul class="nav nav-tabs bg-light border-bottom border-primary">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#new">Current</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#old">Previous</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#diff">Difference</a>
+                    </li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade " id="old">
+                        <pre id="resultBefore">{{ query.previous }}</pre>
+                    </div>
+                    <div class="tab-pane fade show active" id="new">
+                        <pre id="resultAfter">{{ query.result }}</pre>
+                    </div>
+                    <div class="tab-pane fade" id="diff">
+                        <pre id="difference">{{ query.difference }}</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right mt-3">
+                <button class="btn btn-lg btn-outline-success" onclick="rerun('{{ query.id }}');">ReRun</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+{% else %}
+<div class="alert alert-dismissible alert-danger" style="width:100rem">
+    <h1 class="alert-heading">404</h1>
+    <p class="mb-2">
+    <h2>OPS! Page not found!</h2></p>
+    <h3>The page you are looking for doesn't exist:
+        <a href="{% url 'home' %}">Come back home!</a>
+    </h3>
+</div>{% endif %}
+<div class="modal fade" tabindex="-1" role="dialog" id="spinnerModal">
+    <div class="modal-dialog modal-dialog-centered text-center" role="document">
+        <div class="modal-body">
+            <h1 class="text-white">Wait while loading...</h1>
+            <div class="spinner-border text-info"
+                 style="width: 5rem; height: 5rem;"
+                 role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <h3 class="text-white">It may take a long time</h3>
+        </div>
+    </div>
+</div>
+
+<script>
+    prettyJson('#resultBefore');
+    prettyJson('#resultAfter');
+    prettyJson('#difference');
+
+</script>
+
+{% endblock %}

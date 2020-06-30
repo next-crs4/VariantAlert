@@ -1,0 +1,239 @@
+<!-- templates/variants/history.html -->
+{% extends 'base.html' %}
+{% load pagination_tags %}
+{% block title %}History{% endblock %}
+
+{% block content %}
+<div class='row mt-5 mx-auto'>
+    <div class="center">
+        <h1 class="text-right text-primary">{% if request.GET and request.GET.show == "only_alerts" %}Only your alerts{% else %}All your queries{% endif %}</h1>
+
+        <hr class="my-4">
+        {% if queries %}
+        {% autopaginate queries 10 %}
+        <div class="row text-center">
+            <ul class="nav nav-pills mx-auto mb-2">
+                <li class="nav-item">
+                    <span class="nav-link active">
+                    {% if queries|length == 10 %}
+                        {% if request.GET.page %} 
+                        {% widthratio queries|length 1 request.GET.page %}
+                        {% else %}
+                        {{ queries|length }}
+                        {% endif %}
+                    {% else %}
+
+                    {{ num_total }}
+                    {% endif %}
+                    / {{ num_total }}
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <form method="get" id="form-queries" action="">
+            {% csrf_token %}
+            <fieldset>
+                <div class="row col-sm-12 text-center mb-2">
+                    <div class="col-sm-2 text-center">
+                        <button class="btn btn-outline-success"
+                                onclick="apply_filter();">Apply Filters
+                        </button>
+                    </div>
+                    <div class="col-sm-4">
+                        <select id="search_for" name="search_for" class="custom-select border-info">
+                            <option value="" {%if request.GET and request.GET.search_for == "" %}selected="" {%endif%}>
+                            Show all labels
+                            </option>
+                            {% for l in labels %}
+                            <option value="{{ l }}" {%if request.GET and request.GET.search_for == l %}selected="" {%endif%}>
+                                {{ l }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <select id="sort_by" name="sort_by" class="custom-select border-info">
+                            <option value="" {%if request.GET and request.GET.sort_by == "date" %}selected="" {%endif%}>
+                            Sort by Date
+                            </option>
+                            <option value="label"
+                                    {%if request.GET and request.GET.sort_by == "label" %}selected="" {%endif%}>
+                            Label (ascending)
+                            </option>
+                            <option value="-label"
+                                    {%if request.GET and request.GET.sort_by == "-label" %}selected="" {%endif%}>
+                            Label (descending)
+                            </option>
+                            <option value="-date"
+                                    {%if request.GET and request.GET.sort_by == "-date" %}selected="" {%endif%}>
+                            Date (descending)
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <select id="show" name="show" class="custom-select border-info">
+                            <option value=""
+                                    {%if request.GET and request.GET.show == "" %}selected="" {%endif%}>
+                            Show all
+                            </option>
+                            <option value="only_alerts"
+                                    {%if request.GET and request.GET.show == "only_alerts" %}selected="" {%endif%}>
+                            Only alerts
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+        <div class="row">
+            <table class="table table-hover text-center border border-primary" style="width:60rem;">
+                <tr class="table-primary border-bottom border-primary">
+                    <td class="border-bottom border-primary">&nbsp;</td>
+                    <td class="border-bottom border-primary">Label</td>
+                    <td class="border-bottom border-primary">Query</td>
+                    <td class="border-bottom border-primary">Assembly</td>
+                    <td class="border-bottom border-primary">Created</td>
+                    <td class="border-bottom border-primary">Changed</td>
+                    <td class="border-bottom border-primary text-info">Alerts</td>
+                    <td class="border-bottom border-primary">Result</td>
+                </tr>
+                {% for query in queries %}
+                <tr class="{% if forloop.counter|divisibleby:'2' %}table-secondary{% else %}table-light{% endif %}"
+                    style="max-height:5px;">
+                    <td class="border-bottom border-primary">
+                        <button class="btn btn-lg btn-outline-success" onclick="details('{{ query.id }}');">
+                            {{ forloop.counter }}
+                        </button>
+                    </td>
+                    <td class="border-bottom border-primary">{{ query.label }}</td>
+                    <td class="border-bottom border-primary">{{ query.query }}</td>
+                    <td class="border-bottom border-primary">{{ query.assembly }}</td>
+                    <td class="border-bottom border-primary">{{ query.date }}</td>
+                    <td class="border-bottom border-primary">{{ query.update }}</td>
+                    <td class="border-bottom border-primary {% ifnotequal query.difference "[]" %}bg-info {% endifnotequal %} my-auto">
+                    {% ifnotequal query.difference "[]" %}
+                    <span class="fas fa-flag text-white" aria-hidden="true"></span>
+                    {% endifnotequal %}
+                    </td>
+                    <td class="border-bottom border-primary">
+                        <button class="btn btn-lg btn-outline-info"
+                                onclick="view('{{ query.id }}', '{{ query.result }}', '{{ query.previous }}',
+                                    '{{ query.difference }}','{{ query.label }}', '{{ query.query}}', '{{ query.date }}',
+                                    '{{ query.update }}');">
+                            View
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            <div class="text-right">{% paginate %}</div>
+            {% else %}
+            <div class="alert alert-dismissible alert-info" style="width:70rem">
+                <h1 class="alert-heading">Warning!</h1>
+                <p class="mb-0">
+                <h3> {% if request.GET and request.GET.show == "only_alerts" %}No alert is reported{% else %}You have
+                    not saved any queries for the moment{% endif %}</h3></p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="spinnerModal">
+    <div class="modal-dialog modal-dialog-centered text-center" role="document">
+        <div class="modal-body">
+            <h1 class="text-white">Wait while loading...</h1>
+            <div class="spinner-border text-info"
+                 style="width: 5rem; height: 5rem;"
+                 role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <h3 class="text-white">It may take a long time</h3>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="resultModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <div class="row col-md-12">
+                    <div class="col-md-4 text-left">
+                        <h5 class="modal-title text-dark" id="modal-header-label"></h5>
+                        <h5 class="modal-title text-dark" id="modal-header-query"></h5>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h5>Created</h5>
+                        <h6 class="modal-title text-dark" id="modal-header-date"></h6>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <h5>Changed</h5>
+                        <h6 class="modal-title text-dark" id="modal-header-update"></h6>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-body">
+                <div>
+                    <ul class="nav nav-tabs bg-light">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#new">Current</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#old">Previous</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#diff">Difference</a>
+                        </li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                        <div class="tab-pane fade " id="old">
+                            <pre id="resultBefore"></pre>
+                        </div>
+                        <div class="tab-pane fade show active" id="new">
+                            <pre id="resultAfter"></pre>
+                        </div>
+                        <div class="tab-pane fade" id="diff">
+                            <pre id="difference"></pre>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="modal-btn-rerun" class="btn btn-outline-success">ReRun</button>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    hideModal();
+    hideModal('#resultModal');
+
+    function details(id) {
+        url = "/variants/query/"+id;
+        goto(url);
+    }
+
+    function view(id, result, previous, difference, label, query, date, update) {
+        prettyJson('#resultBefore', previous);
+        prettyJson('#resultAfter', result);
+        prettyJson('#difference', difference);        
+
+        $('#modal-header-label').html(label);
+        $('#modal-header-query').html(query);
+        $('#modal-header-date').html(date);
+        $('#modal-header-update').html(update);
+        $('#modal-btn-rerun').click(function(){
+            rerun(id);            
+        });
+        showModal('#resultModal');
+    }
+
+
+
+
+</script>
+
+{% endblock %}

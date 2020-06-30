@@ -1,0 +1,57 @@
+<!-- templates/variants/query.html -->
+{% extends 'base.html' %}
+
+{% block title %}Query{% endblock %}
+
+{% block content %}
+<div class="w-100" style="margin-top:3rem;">
+    <h1 class="text-right text-primary">Create your query</h1>
+    <hr class="my-4">
+    <form method="post" id="form-query" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset>
+            <ul class="nav nav-tabs bg-default border-bottom border-info">
+                <li class="nav-item border-info">
+                    <a class="nav-link {% if not form.csv_label.errors and not form.csv_file.errors %}active{% endif %}" data-toggle="tab" href="#single">Single</a>
+                </li>
+                <li class="nav-item border-info">
+                    <a class="nav-link {% if form.csv_label.errors or form.csv_file.errors %}active{% endif %}"
+                       data-toggle="tab" href="#multiples">Multiple</a>
+                </li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade {% if not form.csv_label.errors and not form.csv_file.errors %}show active{% endif %}" id="single">
+                    {% include "variants/query.single.html" %}
+                </div>
+                <div class="tab-pane fade {% if form.csv_label.errors or form.csv_file.errors %}show active{% endif %}" id="multiples">
+                    {% include "variants/query.multiples.html" %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-10">&nbsp;</div>
+                <div class="col-sm-2">
+                    <button class="btn btn-outline-success btn-lg btn-block" onclick="run();">Run</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="spinnerModal">
+    <div class="modal-dialog modal-dialog-centered text-center" role="document">
+        <div class="modal-body">
+            <h1 class="text-white">Wait while loading...</h1>
+            <div class="spinner-border text-info"
+                 style="width: 5rem; height: 5rem;"
+                 role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <h3 class="text-white">It may take a long time</h3>
+        </div>
+    </div>
+</div>
+<script>
+hideModal();
+
+</script>
+
+{% endblock %}

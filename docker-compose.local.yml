@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    container_name: db01
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres 
+    restart: unless-stopped
+    volumes:
+      - ~/variant-alert/postgres-data:/var/lib/postgresql/data
+    ports:
+     - "5432:5432"
+  web:
+    build: .
+    container_name: dj01
+    command: > 
+      bash -c "cd src && python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    expose:
+      - "8000"
+    depends_on:
+      - db
+  nginx:
+    image: nginx:latest
+    container_name: ng01
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config/nginx/local:/etc/nginx/conf.d
+      - ./src/static:/static
+    depends_on:
+      - web
+

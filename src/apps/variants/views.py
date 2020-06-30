@@ -1,0 +1,121 @@
+# variants/views.py
+from . import forms
+from django.urls import reverse_lazy
+from django.views import generic
+from django.http import HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.timezone import now
+
+from . import models
+import json
+
+from components.jsoncompare import compare
+from components.variants import Variants
+from components.medley import build_query, ret_query
+from components.readers import CSVReader
+
+
+class Query(LoginRequiredMixin, generic.CreateView):
+    template_name = 'variants/query.html'
+    form_class = forms.QueryForm
+
+    def form_valid(self, form):
+        v = Variants()
+        query = form.save(commit=False)
+        csv_file = form.cleaned_data['csv_file']
+        
+        if not csv_file:
+            query.query = build_query(query)
+            query.result = v.get_variant(query.query, query.assembly) 
+            query.user_id = self.request.user.id
+            query.save()
+            return HttpResponseRedirect(reverse_lazy('details', args=[query.id]))
+        
+        else:
+            queries = CSVReader(csv_file)
+            for row in queries.get_content():
+                models.QueryModel.objects.create(
+                    label=form.cleaned_data['csv_label'],
+                    chromosome='chr'+row.get('chromosome'),
+                    position=row.get('position'),
+                    assembly=row.get('assembly'),
+                    variant_ref=row.get('variant_reference'),
+                    variant_alt=row.get('variant_alternate'),
+                    query=build_query(row),
+                    result=v.get_variant(build_query(row), row.get('assembly')), 
+                    user_id=self.request.user.id,
+                    )
+            return HttpResponseRedirect(reverse_lazy('history'))
+
+
+class History(LoginRequiredMixin, generic.base.TemplateView):
+
+    template_name = 'variants/history.html'
+     
+    def get_queries(self, user_id, _filter=None):
+        queries = models.QueryModel.objects.filter(user_id=user_id)
+        
+        if 'search_for' in _filter and _filter.get('search_for'):
+            queries = queries.filter(label=_filter.get('search_for'))
+        
+        if 'sort_by' in _filter and _filter.get('sort_by'):
+            queries = queries.order_by(_filter.get('sort_by'))
+
+        if 'show' in _filter and 'alerts' in _filter.get('show'):
+            queries = queries.exclude(difference=list()).exclude(difference=json.dumps(list()))
+
+        return [ret_query(q) for q in queries]
+
+    def get_context_data(self, **kwargs):
+        context = super(History, self).get_context_data(**kwargs)
+        queries = self.get_queries(self.request.user.id,
+                                   _filter=self.request.GET)
+        context['queries'] = queries
+        context['labels'] = list(set([q.label for q in queries]))
+        context['num_total'] = len(queries)
+        context['filtering'] = self.request.GET
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        return super(History, self).render_to_response(context)
+
+
+class Details(LoginRequiredMixin, generic.base.TemplateView):
+    template_name = 'variants/details.html'
+    
+    def get_query(self, query_id):
+        query = models.QueryModel.objects.get(pk=query_id)
+        return ret_query(query)
+
+    def get_context_data(self, **kwargs):
+        context = super(Details, self).get_context_data(**kwargs)
+        context['query'] = self.get_query(context.get('query_id'))
+        return context
+
+
+class Rerun(LoginRequiredMixin, generic.base.TemplateView):
+    template_name = 'variants/rerun.html'
+    
+    def get_query(self, query_id):
+        query = models.QueryModel.objects.get(pk=query_id)
+        return query
+
+    def rerun(self, query_id):
+        v = Variants()
+        query = self.get_query(query_id)
+        query.previous = query.result
+        query.result = v.get_variant(query.query, query.assembly)
+        query.difference = compare(query.previous, query.result)
+        query.date = query.date
+        if query.difference:
+            query.update = now()
+        query.save() 
+        return ret_query(query)
+
+    def get_context_data(self, **kwargs):
+        context = super(Rerun, self).get_context_data(**kwargs)
+        context['query'] = self.rerun(context.get('query_id'))
+        return context
+
+
