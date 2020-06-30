@@ -1,6 +1,12 @@
 # VariantAlert 
 
+[VariantAlert](http://variant-alert.crs4.it/) is a free service that annotates variants provided by the user using multiple variant annotation databases.
 
+To keep users informed about updates, the annotation is repeated daily and if a change is detected the user is notified by email.
+
+For more details, please see [About](http://variant-alert.crs4.it/about) section.
+
+VariantAlert is developed and is hosted by [CRS4](http://www.crs4.it/), Italy.
 ## Requirements
 
 ### Docker
@@ -8,11 +14,6 @@
 - [docker-compose](https://docs.docker.com/compose/install/) 
 
 See [docker-compose docs](https://docs.docker.com/compose/reference/overview/)
-
-### Self signed certificate (only for localhost)
-- [openssl](https://www.openssl.org)
-
-See [Certificates for localhost](https://letsencrypt.org/docs/certificates-for-localhost/)
 
 ## Quickstart
 
@@ -34,7 +35,7 @@ make EMAIL_HOST=smtp.yourserver.com \
     EMAIL_USER=your@yourserver.com \
     EMAIL_PASSWORD=your-email-account-password \
     EMAIL_PORT=your-server-port \
-    HOST=https://0.0.0.0 \
+    HOST=0.0.0.0 \
   start-local
 ```
 
@@ -51,7 +52,7 @@ make stop
 
 From the second execution
 ```bash
-make start
+make start-local
 ```
 
 Remove VariantAlert app from your machine
@@ -63,3 +64,6 @@ Print the help message
 ```bash
 make help
 ```
+
+## How to cite VariantAlert
+To reference VariantAlert in your work, please cite the "http://variant-alert.crs4.it" URL.
