@@ -31,15 +31,15 @@ cd VariantAlert
 3 - Bring up the VariantAlert app
 ```bash
 make EMAIL_HOST=smtp.yourserver.com \
-    EMAIL_HOST_USER=your@yourserver.com \
-    EMAIL_HOST_PASSWORD=your-email-account-password \
+    EMAIL_USER=your@yourserver.com \
+    EMAIL_PASSWORD=your-email-account-password \
     EMAIL_PORT=your-server-port \
-    REAL_URL=https://0.0.0.0 \
-  start
+    HOST=https://0.0.0.0 \
+  start-local
 ```
 
 4 - Point your browser to: 
-`https://0.0.0.0`
+`http://0.0.0.0:8000
  
  
 #### Other commands

@@ -2,7 +2,7 @@
 
 domains=(example.com)
 rsa_key_size=4096
-data_path="../config/certbot"
+data_path="config/certbot"
 email="info@example.com" # Adding a valid address is strongly recommended
 staging=0                # Set to 1 if you're testing your setup to avoid hitting request limits
 
@@ -34,8 +34,8 @@ for domain in "${domains[@]}"; do
     echo "### Creating dummy certificate for $domain ..."
     path="/etc/letsencrypt/live/$domain"
     mkdir -p "$data_path/conf/live/$domain"
-    docker-compose -f docker-compose.prod.yml run --rm --entrypoint "\
-    openssl req -x509 -nodes -newkey rsa:1024 -days 1\
+    docker-compose -f docker-compose.prod.yml run --rm --entrypoint " \
+    openssl req -x509 -nodes -newkey rsa:1024 -days 1 \
       -keyout "$path/privkey.pem" \
       -out "$path/fullchain.pem" \
       -subj '/CN=localhost'" certbot
@@ -48,7 +48,7 @@ echo
 
 for domain in "${domains[@]}"; do
     echo "### Removing dummy certificate for $domain ..."
-    docker-compose -f docker-compose.prod.yml run --rm --entrypoint "\
+    docker-compose -f docker-compose.prod.yml run --rm --entrypoint " \
     rm -Rf /etc/letsencrypt/live/$domain" certbot
     echo
 done

@@ -35,11 +35,13 @@ services:
       - ./config/certbot/conf:/etc/letsencrypt
       - ./config/certbot/www:/var/www/certbot
       - ./src/static:/static
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     depends_on:
       - web
 
   certbot:
     image: certbot/certbot
+    container_name: cb01
     restart: unless-stopped
     volumes:
       - ./config/certbot/conf:/etc/letsencrypt

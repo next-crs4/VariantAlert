@@ -62,11 +62,10 @@ init-local: init
 init-prod: init
 	sed -i -e 's|${DEFAULT_VARIANT_ALERT_ROOT}|${VARIANT_ALERT_ROOT}|g;' docker-compose.prod.yml
 	sed -i -e 's|${DUMMY_HOST}|${HOST}|g;' src/variant_alert/settings.py
-	sed -i -e 's|info@example.com|${EMAIL_USER}|g;' scripts/init-letsencrypt.sh
-	sed -i -e 's|example.com|${HOST}|g;' scripts/init-letsencrypt.sh
+	sed -i -e 's|info@example.com|${EMAIL_USER}|g;' init-letsencrypt.sh
+	sed -i -e 's|example.com|${HOST}|g;' init-letsencrypt.sh
 	sed -i -e 's|example.com|${HOST}|g;' config/nginx/prod/variant-alert.conf
-	chmod +x scripts/init-letsencrypt.sh
-	scripts/init-letsencrypt.sh
+	chmod +x init-letsencrypt.sh
 
 start-local: init-local
 	docker-compose -f docker-compose.local.yml build --build-arg USER_ID=${USERID} --build-arg GROUP_ID=${GROUPID}
@@ -75,6 +74,7 @@ start-local: init-local
 
 start-prod: init-prod
 	docker-compose -f docker-compose.prod.yml build --build-arg USER_ID=${USERID} --build-arg GROUP_ID=${GROUPID}
+	./init-letsencrypt.sh
 	docker-compose -f docker-compose.prod.yml up -d
 	@echo "Point your browser to: https://${HOST}"
 
