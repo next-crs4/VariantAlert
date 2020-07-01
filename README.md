@@ -89,7 +89,7 @@ $ make help
 VariantAlert - a tool to notify updates in genetic variant annotations
 https://github.com/next-crs4/VariantAlert
  
-Please use `make [optiosn] <target>` where <target> is one of
+Please use `make [options] <target>` where <target> is one of
   start-local             bring up the variant-alert app in your local/develop environment (0.0.0.0)
   start-prod              bring up the variant-alert app in production environment (with ssl)
   stop                    bring down the variant-alert app
