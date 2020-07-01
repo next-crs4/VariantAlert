@@ -13,6 +13,7 @@ services:
       - ~/variant-alert/postgres-data:/var/lib/postgresql/data
     ports:
      - "5432:5432"
+
   web:
     build: .
     container_name: dj01
@@ -24,26 +25,18 @@ services:
       - "8000"
     depends_on:
       - db
+
   nginx:
     image: nginx:latest
     container_name: ng01
     ports:
-      - "85:80"
+      - "80:80"
       - "443:443"
     volumes:
       - ./config/nginx/prod:/etc/nginx/conf.d
-      - ./config/certbot/conf:/etc/letsencrypt
-      - ./config/certbot/www:/var/www/certbot
+      - ./config/ssl:/etc/ssl/certs
       - ./src/static:/static
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     depends_on:
       - web
 
-  certbot:
-    image: certbot/certbot
-    container_name: cb01
-    restart: unless-stopped
-    volumes:
-      - ./config/certbot/conf:/etc/letsencrypt
-      - ./config/certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 5d & wait $${!}; done;'"
+

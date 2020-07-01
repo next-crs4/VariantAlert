@@ -24,6 +24,8 @@ services:
       - "8000"
     depends_on:
       - db
+
+
   nginx:
     image: nginx:latest
     container_name: ng01
@@ -34,4 +36,5 @@ services:
       - ./src/static:/static
     depends_on:
       - web
+
 
