@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'prettyjson',
     'django_cron',
     'pagination_bootstrap',
+    'mathfilters',
 ]
 
 MIDDLEWARE = [

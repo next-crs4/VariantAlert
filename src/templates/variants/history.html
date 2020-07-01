@@ -1,12 +1,19 @@
 <!-- templates/variants/history.html -->
 {% extends 'base.html' %}
 {% load pagination_tags %}
+{% load mathfilters %}
 {% block title %}History{% endblock %}
 
 {% block content %}
 <div class='row mt-5 mx-auto'>
     <div class="center">
-        <h1 class="text-right text-primary">{% if request.GET and request.GET.show == "only_alerts" %}Only your alerts{% else %}All your queries{% endif %}</h1>
+        <h1 class="text-right text-primary">
+            {% if request.GET and request.GET.show == "only_alerts" %}
+                Only your alerts
+            {% else %}
+                All your queries
+            {% endif %}
+        </h1>
 
         <hr class="my-4">
         {% if queries %}
@@ -102,7 +109,11 @@
                     style="max-height:5px;">
                     <td class="border-bottom border-primary">
                         <button class="btn btn-lg btn-outline-success" onclick="details('{{ query.id }}');">
+                            {% if request.GET.page %}
+                            {{ request.GET.page|sub:1|mul:10|add:forloop.counter }}
+                            {% else %}
                             {{ forloop.counter }}
+                            {% endif %}
                         </button>
                     </td>
                     <td class="border-bottom border-primary">{{ query.label }}</td>

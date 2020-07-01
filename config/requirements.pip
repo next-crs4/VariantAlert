@@ -5,3 +5,4 @@ django-prettyjson
 django_cron
 django-pagination-bootstrap<2
 gunicorn
+django-mathfilters
