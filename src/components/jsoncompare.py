@@ -86,8 +86,8 @@ def compare(json1, json2):
     newType = 'CHANGED'
     if type == PATH:
       newType = 'REMOVED'
-    diffs.append({'type': newType, 'message': message})
+    diffs.append({'type': newType, 'message': message.replace("'","")})
   for type, message in diff2:
-    diffs.append({'type': 'ADDED', 'message': message})
+    diffs.append({'type': 'ADDED', 'message': message.replace("'","")})
   #return json.dumps(diffs)
   return diffs
