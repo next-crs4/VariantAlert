@@ -3,7 +3,7 @@
            <div class="row">
             <div class="form-group col-sm-4 ">
               <label class="col-form-label text-primary" for="{{ form.label.id_for_label }}">{{ form.label.label_tag }}</label>
-              <input type="text" class="form-control form-control-sm border-info" placeholder="{{ form.label.help_text }}" 
+              <input type="text" class="form-control form-control-sm border-info" placeholder="{{ form.label.help_text }}"
                 id="{{ form.label.id_for_label }}" name="{{ form.label.name }}">
               {% for error in form.label.errors %}
         <div class="alert alert-dismissible alert-danger mt-2">
@@ -15,7 +15,7 @@
             <div class="form-group col-sm-4">
               <label class="col-form-label text-primary" for="{{
               form.chromosome.id_for_label }}">{{ form.chromosome.label_tag }}</label>
-              <select class="form-control form-control-sm border-info"
+              <select class="custom-select custom-select-sm border-info"
               id="{{form.chromosome.id_for_label }}" name="{{ form.chromosome.name }}">
               {% for opt in form.chromosome.field.choices %}
                 <option value="{{ opt.0 }}">{{ opt.1 }}</option>
@@ -45,7 +45,7 @@
            <div class="form-group col-sm-4">
               <label class="col-form-label text-primary" for="{{
               form.assembly.id_for_label }}">{{ form.assembly.label_tag }}</label>
-              <select class="form-control form-control-sm border-info"
+              <select class="custom-select custom-select-sm border-info"
               name="{{form.assembly.name }}" id="{{ form.assembly.id_for_label }}">
               {% for opt in form.assembly.field.choices %}
                 <option value="{{ opt.0 }}">{{ opt.1 }}</option>
@@ -61,7 +61,7 @@
              <div class="form-group col-sm-4">
               <label class="col-form-label text-primary" for="{{
               form.variant_ref.id_for_label }}">{{ form.variant_ref.label_tag }}</label>
-              <select class="form-control form-control-sm border-info"
+              <select class="custom-select custom-select-sm border-info"
               name="{{form.variant_ref.name }}" id="{{ form.variant_ref.id_for_label }}">
               {% for opt in form.variant_ref.field.choices %}
                 <option value="{{ opt.0 }}">{{ opt.1 }}</option>
@@ -77,7 +77,7 @@
              <div class="form-group col-sm-4">
               <label class="col-form-label text-primary" for="{{
               form.variant_alt.id_for_label }}">{{ form.variant_alt.label_tag }}</label>
-              <select class="form-control form-control-sm border-info"
+              <select class="custom-select custom-select-sm border-info"
               name="{{form.variant_alt.name }}" id="{{ form.variant_alt.id_for_label }}">
               {% for opt in form.variant_alt.field.choices %}
                 <option value="{{ opt.0 }}">{{ opt.1 }}</option>

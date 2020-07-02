@@ -51,11 +51,11 @@
                        href="#" id="variants">Variants<span class="caret"></span></a>
                     <div class="dropdown-menu" aria-labelledby="variants">
                         <a class="dropdown-item {% if 'query' in request.path %} active {% endif%}"
-                           href="{% url 'query' %}">Add new</a>
+                           href="{% url 'query' %}"><small>Add new</small></a>
                         <a class="dropdown-item {% if 'history' in request.path %} active {% endif%}"
-                           href="{% url 'history' %}">Show all</a>
+                           href="{% url 'history' %}"><small>Show all</small></a>
                         <a class="dropdown-item {% if 'alerts' in request.path %} active {% endif%}"
-                           href="{% url 'history'%}?show=only_alerts">Alerts</a>
+                           href="{% url 'history'%}?show=only_alerts"><small>Alerts</small></a>
                     </div>
                 </li>
                 {% endif %}
@@ -68,24 +68,24 @@
             </ul>
         </div>
         {% if user.is_authenticated %}
-            <span class="navbar-brand">Hi, {{ user.username }}!</span>
+        <span class="navbar-brand"><small>Hi, {{ user.username }}!</small></span>
             <div class="form-inline my-2 my-lg-0">
-                <a class="btn btn-danger my-2 my-sm-0 border-light{% if 'logout' in request.path %} active {% endif %}"
+                <a class="btn btn-sm btn-danger my-2 my-sm-0 border-light{% if 'logout' in request.path %} active {% endif %}"
                    href="{% url 'logout' %}">Logout</a>
             </div>
             {% else %}
             <div class="form-inline my-2 my-lg-0">
-                <a class="btn btn-success my-2 my-sm-0 border-light{% if 'login' in request.path %} active {% endif %}"
+                <a class="btn btn-sm btn-success my-2 my-sm-0 border-light{% if 'login' in request.path %} active {% endif %}"
                    href="{% url 'login' %}">Login</a>
                 <span class="text-white ml-3 mr-3">or</span>
-                <a class="btn btn-success my-2 my-sm-0 border-light {% if 'signup' in request.path %} active {% endif %}"
+                <a class="btn btn-sm btn-success my-2 my-sm-0 border-light {% if 'signup' in request.path %} active {% endif %}"
                    href="{% url 'signup' %}">Sign Up</a>
             </div>
         {% endif %}
     </nav>
 </header>
 <body>
-<div id="variant-alert" class="container">
+<div id="variant-alert" class="container small">
     <div class="row justify-content-center mt-5">
         {% block content %}(no content){% endblock %}
     </div>

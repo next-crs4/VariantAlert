@@ -5,49 +5,46 @@
 {% block title %}History{% endblock %}
 
 {% block content %}
-<div class='row mt-5 mx-auto'>
+<div class='row mt-4 mx-auto'>
     <div class="center">
-        <h1 class="text-right text-primary">
+        <h2 class="text-right text-primary">
             {% if request.GET and request.GET.show == "only_alerts" %}
                 Only your alerts
             {% else %}
                 All your queries
             {% endif %}
-        </h1>
+        </h2>
 
-        <hr class="my-4">
+        <hr class="my-2">
         {% if queries %}
         {% autopaginate queries 10 %}
-        <div class="row text-center">
-            <ul class="nav nav-pills mx-auto mb-2">
-                <li class="nav-item">
-                    <span class="nav-link active">
-                    {% if queries|length == 10 %}
-                        {% if request.GET.page %} 
-                        {% widthratio queries|length 1 request.GET.page %}
-                        {% else %}
-                        {{ queries|length }}
-                        {% endif %}
-                    {% else %}
 
-                    {{ num_total }}
-                    {% endif %}
-                    / {{ num_total }}
-                    </span>
-                </li>
-            </ul>
-        </div>
         <form method="get" id="form-queries" action="">
             {% csrf_token %}
             <fieldset>
-                <div class="row col-sm-12 text-center mb-2">
-                    <div class="col-sm-2 text-center">
-                        <button class="btn btn-outline-success"
-                                onclick="apply_filter();">Apply Filters
-                        </button>
+                <div class="row col-sm-12 mt-3 mb-2">
+                    <div class="col-sm-2 text-left">
+                        <ul class="nav nav-pills mx-auto mb-2">
+                            <li class="nav-item">
+                                <span class="nav-link active">
+                                {% if queries|length == 10 %}
+                                    {% if request.GET.page %}
+                                {% widthratio queries|length 1 request.GET.page %}
+                                {% else %}
+                                {{ queries|length }}
+                                {% endif %}
+                                {% else %}
+
+                                {{ num_total }}
+                                {% endif %}
+                                / {{ num_total }}
+                                </span>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="col-sm-4">
-                        <select id="search_for" name="search_for" class="custom-select border-info">
+
+                    <div class="col-sm-3">
+                        <select id="search_for" name="search_for" class="custom-select custom-select-sm border-info">
                             <option value="" {%if request.GET and request.GET.search_for == "" %}selected="" {%endif%}>
                             Show all labels
                             </option>
@@ -58,8 +55,8 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-sm-4">
-                        <select id="sort_by" name="sort_by" class="custom-select border-info">
+                    <div class="col-sm-3">
+                        <select id="sort_by" name="sort_by" class="custom-select custom-select-sm border-info">
                             <option value="" {%if request.GET and request.GET.sort_by == "date" %}selected="" {%endif%}>
                             Sort by Date
                             </option>
@@ -78,7 +75,7 @@
                         </select>
                     </div>
                     <div class="col-sm-2">
-                        <select id="show" name="show" class="custom-select border-info">
+                        <select id="show" name="show" class="custom-select custom-select-sm border-info">
                             <option value=""
                                     {%if request.GET and request.GET.show == "" %}selected="" {%endif%}>
                             Show all
@@ -88,6 +85,11 @@
                             Only alerts
                             </option>
                         </select>
+                    </div>
+                    <div class="col-sm-2 text-right">
+                        <button class="btn btn-sm    btn-outline-success"
+                                onclick="apply_filter();">Apply Filters
+                        </button>
                     </div>
                 </div>
             </fieldset>
@@ -108,7 +110,7 @@
                 <tr class="{% if forloop.counter|divisibleby:'2' %}table-secondary{% else %}table-light{% endif %}"
                     style="max-height:5px;">
                     <td class="border-bottom border-primary">
-                        <button class="btn btn-lg btn-outline-success" onclick="details('{{ query.id }}');">
+                        <button class="btn btn-sm btn-outline-success" onclick="details('{{ query.id }}');">
                             {% if request.GET.page %}
                             {{ request.GET.page|sub:1|mul:10|add:forloop.counter }}
                             {% else %}
@@ -127,10 +129,8 @@
                     {% endifnotequal %}
                     </td>
                     <td class="border-bottom border-primary">
-                        <button class="btn btn-lg btn-outline-info"
-                                onclick="view('{{ query.id }}', '{{ query.result }}', '{{ query.previous }}',
-                                    '{{ query.difference }}','{{ query.label }}', '{{ query.query}}', '{{ query.date }}',
-                                    '{{ query.update }}');">
+                        <button class="btn btn-sm btn-outline-info"
+                                onclick="view('{{ query.id }}', '{{ query.result }}', '{{ query.previous }}','{{ query.difference }}','{{ query.label }}','{{ query.query}}','{{ query.date }}','{{ query.update }}');">
                             View
                         </button>
                     </td>
@@ -150,7 +150,6 @@
             </div>
             {% endif %}
         </div>
-    </div>
 </div>
 <div class="modal fade" tabindex="-1" role="dialog" id="spinnerModal">
     <div class="modal-dialog modal-dialog-centered text-center" role="document">
@@ -171,20 +170,18 @@
             <div class="modal-header bg-light">
                 <div class="row col-md-12">
                     <div class="col-md-4 text-left">
-                        <h5 class="modal-title text-dark" id="modal-header-label"></h5>
-                        <h5 class="modal-title text-dark" id="modal-header-query"></h5>
+                        <h6 class="modal-title text-dark" id="modal-header-label"></h6>
+                        <h6 class="modal-title text-dark" id="modal-header-query"></h6>
                     </div>
                     <div class="col-md-4 text-center">
-                        <h5>Created</h5>
+                        <h6>Created</h6>
                         <h6 class="modal-title text-dark" id="modal-header-date"></h6>
                     </div>
                     <div class="col-md-4 text-right">
-                        <h5>Changed</h5>
+                        <h6>Changed</h6>
                         <h6 class="modal-title text-dark" id="modal-header-update"></h6>
                     </div>
                 </div>
-
-
             </div>
             <div class="modal-body">
                 <div>
@@ -214,8 +211,8 @@
 
             </div>
             <div class="modal-footer">
-                <button id="modal-btn-rerun" class="btn btn-outline-success">ReRun</button>
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                <button id="modal-btn-rerun" class="btn btn-sm btn-outline-success">ReRun</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

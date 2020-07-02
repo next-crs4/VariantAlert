@@ -4,9 +4,8 @@
 {% block title %}Query{% endblock %}
 
 {% block content %}
-<div class="w-100" style="margin-top:3rem;">
-    <h1 class="text-right text-primary">Create your query</h1>
-    <hr class="my-4">
+<div class="w-100" style="margin-top:2rem;">
+    <h2 class="text-right text-primary">Create your query</h2>
     <form method="post" id="form-query" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset>
@@ -28,9 +27,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-10">&nbsp;</div>
-                <div class="col-sm-2">
-                    <button class="btn btn-outline-success btn-lg btn-block" onclick="run();">Run</button>
+                <div class="col-sm-11">&nbsp;</div>
+                <div class="col-sm-1">
+                    <button class="btn btn-outline-success btn-xs btn-block" onclick="run();">Run</button>
                 </div>
             </div>
         </fieldset>
