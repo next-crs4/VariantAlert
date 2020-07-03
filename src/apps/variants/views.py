@@ -85,7 +85,10 @@ class Details(LoginRequiredMixin, generic.base.TemplateView):
     template_name = 'variants/details.html'
     
     def get_query(self, query_id):
-        query = models.QueryModel.objects.get(pk=query_id)
+        try:
+            query = models.QueryModel.objects.get(pk=query_id)
+        except Exception as e:
+            return None
         return ret_query(query)
 
     def get_context_data(self, **kwargs):
@@ -98,20 +101,25 @@ class Rerun(LoginRequiredMixin, generic.base.TemplateView):
     template_name = 'variants/rerun.html'
     
     def get_query(self, query_id):
-        query = models.QueryModel.objects.get(pk=query_id)
+        try:
+            query = models.QueryModel.objects.get(pk=query_id)
+        except Excpetion as e:
+            return None
         return query
 
     def rerun(self, query_id):
         v = Variants()
         query = self.get_query(query_id)
-        query.previous = query.result
-        query.result = v.get_variant(query.query, query.assembly)
-        query.difference = compare(query.previous, query.result)
-        query.date = query.date
-        if query.difference:
-            query.update = now()
-        query.save() 
-        return ret_query(query)
+        if query:
+            query.previous = query.result
+            query.result = v.get_variant(query.query, query.assembly)
+            query.difference = compare(query.previous, query.result)
+            query.date = query.date
+            if query.difference:
+                query.update = now()
+            query.save()
+            return ret_query(query)
+        return query
 
     def get_context_data(self, **kwargs):
         context = super(Rerun, self).get_context_data(**kwargs)
