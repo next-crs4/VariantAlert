@@ -1,6 +1,7 @@
 import json
 import sys
 import types
+from collections import OrderedDict
 
 TYPE = 'TYPE'
 PATH = 'PATH'
@@ -50,7 +51,7 @@ class Diff(object):
     # if object is list, loop over it and check.
     elif isinstance(first, list):
       for (index, item) in enumerate(first):
-        new_path = '{}[{}]'.format(path, index)
+        new_path = '{}.{}'.format(path, index)
         # try to get the same index from second
         sec = None
         if second != None:
@@ -89,5 +90,6 @@ def compare(json1, json2):
     diffs.append({'type': newType, 'message': message.replace("'","")})
   for type, message in diff2:
     diffs.append({'type': 'ADDED', 'message': message.replace("'","")})
-  #return json.dumps(diffs)
   return diffs
+
+

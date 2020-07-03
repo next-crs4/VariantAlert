@@ -53,25 +53,83 @@
                     </li>
                 </ul>
                 <div id="myTabContent" class="tab-content">
-                    <div class="tab-pane fade " id="old">
-                        <pre id="resultBefore">{{ query.previous }}</pre>
-                    </div>
-                    <div class="tab-pane fade show active" id="new">
-                        <pre id="resultAfter">{{ query.result }}</pre>
+                    <div class="tab-pane fade bg-white" id="old">
+                       {% if query.previous %}
+                        <div class="row col--12 table-primary my-2 mx-2" style="height:3em">
+                            <div class="col-1 my-auto">&nbsp;</div>
+                            <div class="col-5 my-auto"><strong>Field</strong></div>
+                            <div class="col-3 my-auto"><strong>Value</strong></div>
+                        </div>
+                       {% for k,v in query.previous.items %}
+                        <div class="row col--12 my-2 mx-2 {% if forloop.counter|divisibleby:'2' %}bg-light{% endif %}"
+                            style="{% if forloop.counter|divisibleby:'2' %} height:3em {% else %} height:2em {% endif %}" >
+                            <div class="col-1 my-auto">{{ forloop.counter }}</div>
+                            <div class="col-5 my-auto">{{ k }}</div>
+                            <div class="col-3 my-auto">{{ v }}</div>
+                        </div>
+                           {% endfor %}
+                        {% else %}
+                       <div class="alert alert-dismissible alert-secondary mx-2 my-2">
+                            <h1><strong>Query did not return result</strong></h1>
+                        </div>
+                        {% endif %}
+                       </div>
+                    <div class="tab-pane fade show active bg-white" id="new">
+                        {% if query.result %}
+                    <div class="row col--12 table-primary my-2 mx-2" style="height:3em">
+                            <div class="col-1 my-auto">&nbsp;</div>
+                            <div class="col-5 my-auto"><strong>Field</strong></div>
+                            <div class="col-3 my-auto"><strong>Value</strong></div>
+                        </div>
+                       {% for k,v in query.result.items %}
+                        <div class="row col--12 my-2 mx-2 {% if forloop.counter|divisibleby:'2' %} bg-light {% endif %}"
+                             style="{% if forloop.counter|divisibleby:'2' %} height:3em {% else %} height:2em {% endif %}" >
+                            <div class="col-1 my-auto">{{ forloop.counter }}</div>
+                            <div class="col-5 my-auto">{{ k }}</div>
+                            <div class="col-3 my-auto">{{ v }}</div>
+                        </div>
+                           {% endfor %}
+                       {% else %}
+                       <div class="alert alert-dismissible alert-secondary mx-2 my-2">
+                            <h1><strong>Query did not return result</strong></h1>
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="tab-pane fade" id="diff">
-                        <pre id="difference">{{ query.difference }}</pre>
+                        {% if query.difference %}
+                       <div class="row col--12 table-primary my-2 mx-2" style="height:3em">
+                            <div class="col-1 my-auto">&nbsp;</div>
+                            <div class="col-5 my-auto"><strong>Field</strong></div>
+                            <div class="col-2 my-auto"><strong>Type</strong></div>
+                            <div class="col-2 my-auto"><strong>Previous</strong></div>
+                            <div class="col-2 my-auto"><strong>Current</strong></div>
+                        </div>
+                       {% for d in query.difference %}
+                        <div class="row col--12 my-2 mx-2 {% if forloop.counter|divisibleby:'2' %}bg-light{% endif %}"
+                            style="{% if forloop.counter|divisibleby:'2' %} height:3em {% else %} height:2em {% endif %}" >
+                            <div class="col-1 my-auto">{{ forloop.counter }}</div>
+                            <div class="col-5 my-auto">{{ d.field }}</div>
+                            <div class="col-2 my-auto">{{ d.type }}</div>
+                            <div class="col-2 my-auto">{{ d.previous }}</div>
+                            <div class="col-2 my-auto">{{ d.current }}</div>
+                        </div>
+                           {% endfor %}
+                        {% else %}
+                        <div class="alert alert-dismissible alert-secondary mx-2 my-2">
+                            <h1><strong>Nothing is changed</strong></h1>
+                        </div>
+                        {% endif %}
+                       </div>
                     </div>
                 </div>
             </div>
-            <div class="text-right mt-2">
+            <div class="text-right my-2 mr-2">
                 <button class="btn btn-sm btn-outline-success" onclick="rerun('{{ query.id }}');">ReRun</button>
             </div>
         </div>
-    </div>
 </div>
 {% else %}
-<div class="alert alert-dismissible alert-danger" style="width:100rem">
+<div class="alert alert-dismissible alert-danger mt-4" style="width:100rem">
     <h1 class="alert-heading">404</h1>
     <p class="mb-2">
     <h2>OPS! Page not found!</h2></p>
@@ -92,11 +150,5 @@
         </div>
     </div>
 </div>
-
-<script>
-    prettyJson('#resultBefore');
-    prettyJson('#resultAfter');
-    prettyJson('#difference');
-</script>
 
 {% endblock %}
