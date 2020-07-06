@@ -45,9 +45,33 @@ def build_query(query):
     return query['chromosome'] + ':' + 'g.' + str(query['position']) + query['variant_reference'] + '>' + query[
         'variant_alternate']
 
-def rehash_diff(diffs):
-    tags = {('CHANGED', '|'), ('CHANGED', ','), ('ADDED', ''), ('REMOVED', '')}
+def _filter(diffs):
+    _types = ('str', 'int', 'list', 'dict', 'float', 'boolean')
+    l = list()
+    for i in range(0, len(diffs)):
+        passed = True
 
+        d = diffs[i]
+        p = diffs[i-1] if i > 0 else None
+        n = diffs[i+1] if i < len(diffs)-1 else None
+
+        if d.get('current') in _types or d.get('previous') in _types:
+            passed = False
+
+        if d.get('field').endswith(']'):
+            if p and p.get('field')[:-3] == d.get('field')[:-3]:
+                if p.get('previous') == d.get('current') and p.get('current') == d.get('previous'):
+                    passed = False
+
+            if n and n.get('field')[:-3] == d.get('field')[:-3]:
+                if n.get('previous') == d.get('current') and n.get('current') == d.get('previous'):
+                    passed = False
+
+        if passed:
+            l.append(d)
+    return l
+
+def rehash_diff(diffs):
     l = list()
     for d in diffs:
         type = d.get('type')
@@ -57,28 +81,36 @@ def rehash_diff(diffs):
                 m = message.split('-')
                 field = m[0].strip()
                 values = m[1].strip()
-                for t in tags:
-                    if t[0] in type and t[1]!='' and t[1] in values:
-                        v = values.split(t[1])
+                if field in 'dbnsfp.aa.codon_degeneracy':
+                    print("messages: "+str(message))
+                    print("m: "+str(m))
+                    print("values: "+str(values))
+
+                if 'CHANGED' in type and '|' in values:
+                        v = values.split('|')
                         previous = v[0].strip()
                         current = v[1].strip() if len(v)>1 else ''
-                    if t[0] in type and 'ADDED' in t[0]:
-                        current = values.strip()
-                        previous = ''
-                    if t[0] in type and 'REMOVED' in t[0]:
-                        current = values.strip()
-                        previous = ''
+                if 'CHANGED' in type and '|' not in values and ',' in values:
+                        v = values.split(',')
+                        previous = v[0].strip()
+                        current = v[1].strip() if len(v) > 1 else ''
+                if 'ADDED' in type:
+                    current = values.strip()
+                    previous = ''
+                if 'REMOVED' in type:
+                    current = values.strip()
+                    previous = ''
 
             if '-' not in message:
-                field = message
-                previous = ''
-                current = ''
+                 field = message
+                 previous = ''
+                 current = ''
 
         l.append(dict(field=field, type=type,
                       current=current,
                       previous=previous))
 
-    return  sorted(l, key=lambda k: k['field'])
+    return  _filter(sorted(l, key=lambda k: k['field']))
 
 
 def ret_query(query):
