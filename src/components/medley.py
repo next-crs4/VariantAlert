@@ -81,10 +81,6 @@ def rehash_diff(diffs):
                 m = message.split('-')
                 field = m[0].strip()
                 values = m[1].strip()
-                if field in 'dbnsfp.aa.codon_degeneracy':
-                    print("messages: "+str(message))
-                    print("m: "+str(m))
-                    print("values: "+str(values))
 
                 if 'CHANGED' in type and '|' in values:
                         v = values.split('|')
