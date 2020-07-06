@@ -43,9 +43,6 @@ function goto(url){
     window.location.href = url;
 }
 
-
-
-
 function run(){
     showModal();
     $("#form-query").submit();
@@ -60,6 +57,15 @@ function rerun(id){
 function apply_filter(){
     showModal();
     $("#form-queries").submit();
-
 }
 
+function details(id) {
+    this.url = "/variants/query/"+id;
+    goto(url);
+}
+
+function erase(id) {
+    showModal();
+    this.url = "/variants/query/"+id+"/delete";
+    goto(url);
+}

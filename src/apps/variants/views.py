@@ -87,6 +87,8 @@ class Details(LoginRequiredMixin, generic.base.TemplateView):
     def get_query(self, query_id):
         try:
             query = models.QueryModel.objects.get(pk=query_id)
+            if query.user_id != self.request.user.id:
+                return None
         except Exception as e:
             return None
         return ret_query(query)
@@ -103,6 +105,8 @@ class Rerun(LoginRequiredMixin, generic.base.TemplateView):
     def get_query(self, query_id):
         try:
             query = models.QueryModel.objects.get(pk=query_id)
+            if query.user_id != self.request.user.id:
+                return None
         except Excpetion as e:
             return None
         return query
@@ -127,3 +131,26 @@ class Rerun(LoginRequiredMixin, generic.base.TemplateView):
         return context
 
 
+class Delete(LoginRequiredMixin, generic.base.TemplateView):
+    template_name = 'variants/delete.html'
+
+    def get_query(self, query_id):
+        try:
+            query = models.QueryModel.objects.get(pk=query_id)
+            if query.user_id != self.request.user.id:
+                return None
+        except Exception as e:
+            return None
+        return query
+
+    def delete(self, query_id):
+        query = self.get_query(query_id)
+        if query:
+            query.delete()
+            return True
+        return False
+
+    def get_context_data(self, **kwargs):
+        context = super(Delete, self).get_context_data(**kwargs)
+        context['deleted'] = self.delete(context.get('query_id'))
+        return  context
