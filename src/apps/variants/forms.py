@@ -6,6 +6,7 @@ from components.readers import CSVReader
 
 
 class QueryForm(forms.ModelForm):
+
     csv_file = forms.FileField(label="Upload a csv file with your queries:",
                                required=False,
                                help_text='CSV file with 5 columns: chromosome, position, variant_reference, '
@@ -22,14 +23,17 @@ class QueryForm(forms.ModelForm):
                                )
 
     csv_label = forms.CharField(max_length=50, required=False,
-                                label='Label',
+                                label='Label:',
                                 help_text='All queries will have the same label')
+    
+
 
     class Meta:
         model = models.QueryModel
 
         fields = ['label', 'chromosome', 'position', 'assembly', 'variant_ref',
-                  'variant_alt', 'query', 'result', 'previous', 'difference', 'date', 'update',
+                  'variant_alt', 'query', 'result', 'previous', 'difference',
+                  'date', 'update', 'fields',
                   'csv_file', 'csv_label']
 
         labels = {
@@ -42,7 +46,7 @@ class QueryForm(forms.ModelForm):
         }
 
         help_texts = {
-            'label': 'A descriptive laber for your query',
+            'label': 'A descriptive label for your query',
             'position': 'Genomic Position',
             'variant_ref': 'Variant Reference',
             'variant_alt': 'Variant Alternate',
@@ -60,6 +64,7 @@ class QueryForm(forms.ModelForm):
         csv_label = self.cleaned_data.get('csv_label')
         label = self.cleaned_data.get('label')
         position = self.cleaned_data.get('position')
+        sources =self.cleaned_data.get('sources')
 
         if csv_file and not csv_label:
             msg = forms.ValidationError("This field is required.")

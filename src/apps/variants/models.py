@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 
 from django.utils.timezone import now
 
@@ -35,5 +35,6 @@ class QueryModel(models.Model):
     result = JSONField(default=dict, blank=True)
     previous = JSONField(default=dict, blank=True)
     difference = JSONField(default=list, blank=True)
+    fields = ArrayField(models.CharField(max_length=50, blank=True), default=list, blank=True)
     date = models.DateTimeField(default=now, blank=True)
     update = models.DateTimeField(default=now, blank=True)

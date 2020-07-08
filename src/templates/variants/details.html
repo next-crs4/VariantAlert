@@ -31,6 +31,7 @@
                     <th class="border-bottom border-primary">Position</th>
                     <th class="border-bottom border-primary">Reference</th>
                     <th class="border-bottom border-primary">Alternate</th>
+                    <th class="border-bottom border-primary">Sources</th>
                 </tr>
                 <tr class="table-light">
                     <td>{{ query.assembly }}</td>
@@ -38,6 +39,27 @@
                     <td>{{ query.position }}</td>
                     <td>{{ query.variant_ref }}</td>
                     <td>{{ query.variant_alt }}</td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                          <button type="button" class="btn btn-sm btn-outline-info">{{ query.fields | length }}</button>
+                              <div class="btn-group" role="group">
+                                <button id="btnGroupDrop1" type="button"
+                                        class="btn btn-sm btn-outline-info dropdown-toggle"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
+                                </button>
+                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1"
+                                 style="max-height:300px; overflow-y:auto;">
+                                {% for f in query.fields %}
+                              <span class="dropdown-item {% if forloop.counter|divisibleby:'2' %}bg-white{% else %}bg-light{% endif %}" >
+                                  {{ f }}
+                              </span>
+                                {% endfor %}
+                            </div>
+                          </div>
+                        </div>
+                    </td>
                 </tr>
             </table>
             <div class="card-text border border-primary">

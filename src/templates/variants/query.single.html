@@ -1,99 +1,99 @@
 <!-- templates/variants/query.single.html -->
-          <div class="center py-3 px-4 bg-default" >
-           <div class="row">
-            <div class="form-group col-sm-4 ">
-              <label class="col-form-label text-primary" for="{{ form.label.id_for_label }}">{{ form.label.label_tag }}</label>
-              <input type="text" class="form-control form-control-sm border-info" placeholder="{{ form.label.help_text }}"
-                id="{{ form.label.id_for_label }}" name="{{ form.label.name }}">
-              {% for error in form.label.errors %}
-        <div class="alert alert-dismissible alert-danger mt-2">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          <strong>Please, be careful!</strong><br>{{ error }}
+<div class="center py-3 px-4 bg-default">
+    <div class="row">
+        <div class="form-group col-sm-4 ">
+            <label class="col-form-label text-primary" for="{{ form.label.id_for_label }}">
+                {{ form.label.label_tag }}</label>
+            <input type="text" class="form-control form-control-sm border-info" placeholder="{{ form.label.help_text }}"
+                   id="{{ form.label.id_for_label }}" name="{{ form.label.name }}">
+            {% for error in form.label.errors %}
+            <div class="alert alert-dismissible alert-danger mt-2">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Please, be careful!</strong><br>{{ error }}
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-</div>
-            <div class="form-group col-sm-4">
-              <label class="col-form-label text-primary" for="{{
+        <div class="form-group col-sm-4">
+            <label class="col-form-label text-primary" for="{{
               form.chromosome.id_for_label }}">{{ form.chromosome.label_tag }}</label>
-              <select class="custom-select custom-select-sm border-info"
-              id="{{form.chromosome.id_for_label }}" name="{{ form.chromosome.name }}">
-              {% for opt in form.chromosome.field.choices %}
+            <select class="custom-select custom-select-sm border-info"
+                    id="{{form.chromosome.id_for_label }}" name="{{ form.chromosome.name }}">
+                {% for opt in form.chromosome.field.choices %}
                 <option value="{{ opt.0 }}">{{ opt.1 }}</option>
-              {% endfor %}
-              </select>
-             {% for error in form.chromosome.errors %}
-        <div class="alert alert-dismissible alert-danger mt-2">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          <strong>Please, be careful!</strong><br>{{ error }}
+                {% endfor %}
+            </select>
+            {% for error in form.chromosome.errors %}
+            <div class="alert alert-dismissible alert-danger mt-2">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Please, be careful!</strong><br>{{ error }}
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-</div>
-           <div class="form-group col-sm-4">
-              <label class="col-form-label text-primary" for="{{ form.position.id_for_label }}">{{ form.position.label_tag }}</label>
-              <input type="text" class="form-control form-control-sm border-info" name="{{form.position.name }}" 
-              placeholder="{{ form.position.help_text }}" id="{{ form.position.id_for_label }}">
-             {% for error in form.position.errors %}
-        <div class="alert alert-dismissible alert-danger mt-2">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          <strong>Please, be careful!</strong><br>{{ error }}
+        <div class="form-group col-sm-4">
+            <label class="col-form-label text-primary" for="{{ form.position.id_for_label }}">
+                {{ form.position.label_tag }}</label>
+            <input type="text" class="form-control form-control-sm border-info" name="{{form.position.name }}"
+                   placeholder="{{ form.position.help_text }}" id="{{ form.position.id_for_label }}">
+            {% for error in form.position.errors %}
+            <div class="alert alert-dismissible alert-danger mt-2">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Please, be careful!</strong><br>{{ error }}
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-</div>
 
-           </div>
-           <div class="row">
-           <div class="form-group col-sm-4">
-              <label class="col-form-label text-primary" for="{{
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-4">
+            <label class="col-form-label text-primary" for="{{
               form.assembly.id_for_label }}">{{ form.assembly.label_tag }}</label>
-              <select class="custom-select custom-select-sm border-info"
-              name="{{form.assembly.name }}" id="{{ form.assembly.id_for_label }}">
-              {% for opt in form.assembly.field.choices %}
+            <select class="custom-select custom-select-sm border-info"
+                    name="{{form.assembly.name }}" id="{{ form.assembly.id_for_label }}">
+                {% for opt in form.assembly.field.choices %}
                 <option value="{{ opt.0 }}">{{ opt.1 }}</option>
-              {% endfor %}
-              </select>
-             {% for error in form.assembly.errors %}
-        <div class="alert alert-dismissible alert-danger mt-2">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          <strong>Please, be careful!</strong><br>{{ error }}
+                {% endfor %}
+            </select>
+            {% for error in form.assembly.errors %}
+            <div class="alert alert-dismissible alert-danger mt-2">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Please, be careful!</strong><br>{{ error }}
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-</div>
-             <div class="form-group col-sm-4">
-              <label class="col-form-label text-primary" for="{{
+        <div class="form-group col-sm-4">
+            <label class="col-form-label text-primary" for="{{
               form.variant_ref.id_for_label }}">{{ form.variant_ref.label_tag }}</label>
-              <select class="custom-select custom-select-sm border-info"
-              name="{{form.variant_ref.name }}" id="{{ form.variant_ref.id_for_label }}">
-              {% for opt in form.variant_ref.field.choices %}
+            <select class="custom-select custom-select-sm border-info"
+                    name="{{form.variant_ref.name }}" id="{{ form.variant_ref.id_for_label }}">
+                {% for opt in form.variant_ref.field.choices %}
                 <option value="{{ opt.0 }}">{{ opt.1 }}</option>
-              {% endfor %}
-              </select>
-             {% for error in form.variant_ref.errors %}
-        <div class="alert alert-dismissible alert-danger mt-2">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          <strong>Please, be careful!</strong><br>{{ error }}
+                {% endfor %}
+            </select>
+            {% for error in form.variant_ref.errors %}
+            <div class="alert alert-dismissible alert-danger mt-2">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Please, be careful!</strong><br>{{ error }}
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-</div>
-             <div class="form-group col-sm-4">
-              <label class="col-form-label text-primary" for="{{
+        <div class="form-group col-sm-4">
+            <label class="col-form-label text-primary" for="{{
               form.variant_alt.id_for_label }}">{{ form.variant_alt.label_tag }}</label>
-              <select class="custom-select custom-select-sm border-info"
-              name="{{form.variant_alt.name }}" id="{{ form.variant_alt.id_for_label }}">
-              {% for opt in form.variant_alt.field.choices %}
+            <select class="custom-select custom-select-sm border-info"
+                    name="{{form.variant_alt.name }}" id="{{ form.variant_alt.id_for_label }}">
+                {% for opt in form.variant_alt.field.choices %}
                 <option value="{{ opt.0 }}">{{ opt.1 }}</option>
-              {% endfor %}
-              </select>
-             {% for error in form.variant_alt.errors %}
-        <div class="alert alert-dismissible alert-danger mt-2">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          <strong>Please, be careful!</strong><br>{{ error }}
+                {% endfor %}
+            </select>
+            {% for error in form.variant_alt.errors %}
+            <div class="alert alert-dismissible alert-danger mt-2">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Please, be careful!</strong><br>{{ error }}
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+    </div>
 </div>
-      
-      </div>
- </div>
 {{ form.result.as_hidden }}
 {{ form.date.as_hidden }}
-
 

@@ -19,14 +19,24 @@ class Query(LoginRequiredMixin, generic.CreateView):
     template_name = 'variants/query.html'
     form_class = forms.QueryForm
 
+    def get_context_data(self, **kwargs):
+        context = super(Query, self).get_context_data(**kwargs)
+        v = Variants()
+        context['sources'] = v.get_sources()
+        return context
+
     def form_valid(self, form):
         v = Variants()
+        sources = self.request.POST.getlist('sources')
         query = form.save(commit=False)
+        query.fields = sources
         csv_file = form.cleaned_data['csv_file']
-        
+
         if not csv_file:
             query.query = build_query(query)
-            query.result = v.get_variant(query.query, query.assembly) 
+            query.result = v.get_variant(query=query.query,
+                                         assembly=query.assembly,
+                                         fields=query.fields)
             query.user_id = self.request.user.id
             query.save()
             return HttpResponseRedirect(reverse_lazy('details', args=[query.id]))
@@ -42,7 +52,10 @@ class Query(LoginRequiredMixin, generic.CreateView):
                     variant_ref=row.get('variant_reference'),
                     variant_alt=row.get('variant_alternate'),
                     query=build_query(row),
-                    result=v.get_variant(build_query(row), row.get('assembly')), 
+                    fields=query.fields,
+                    result=v.get_variant(query=build_query(row),
+                                         assembly=row.get('assembly'),
+                                         fields=query.fields),
                     user_id=self.request.user.id,
                     )
             return HttpResponseRedirect(reverse_lazy('history'))
@@ -116,7 +129,7 @@ class Rerun(LoginRequiredMixin, generic.base.TemplateView):
         query = self.get_query(query_id)
         if query:
             query.previous = query.result
-            query.result = v.get_variant(query.query, query.assembly)
+            query.result = v.get_variant(query.query, query.assembly, query.fields)
             query.difference = compare(query.previous, query.result)
             query.date = query.date
             if query.difference:

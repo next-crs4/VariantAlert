@@ -14,11 +14,13 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-    <link rel='stylesheet' href="{% static 'css/default.css' %}">
-    <link rel='stylesheet' href="{% static 'css/json-editor.css' %}">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    <link rel='stylesheet' href="{% static 'css/default.css' %}">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
             integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
@@ -26,9 +28,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 
-    <script type="text/javascript" src="{% static 'js/json-editor.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/default.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/underscore.js' %}"></script>
 
     <title>Variant Alert</title>
 </head>
@@ -43,7 +46,7 @@
         <div class="collapse navbar-collapse pl-5 ml-5" id="navbarColor01">
             <ul class="navbar-nav ml-5">
                 <li class="nav-item {% if request.path == '/' %} active {% endif %}">
-                    <a href="{% url 'home' %}" class="nav-link">Home</a>
+                    <a href="{% url 'home' %}" class="nav-link" onclick="showModal();" >Home</a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
@@ -51,19 +54,19 @@
                        href="#" id="variants">Variants<span class="caret"></span></a>
                     <div class="dropdown-menu" aria-labelledby="variants">
                         <a class="dropdown-item {% if 'query' in request.path %} active {% endif%}"
-                           href="{% url 'query' %}"><small>Add new</small></a>
+                           href="{% url 'query' %}" onclick="showModal();"><small>Add new</small></a>
                         <a class="dropdown-item {% if 'history' in request.path %} active {% endif%}"
-                           href="{% url 'history' %}"><small>Show all</small></a>
+                           href="{% url 'history' %}" onclick="showModal();"><small>Show all</small></a>
                         <a class="dropdown-item {% if 'alerts' in request.path %} active {% endif%}"
-                           href="{% url 'history'%}?show=only_alerts"><small>Alerts</small></a>
+                           href="{% url 'history'%}?show=only_alerts" onclick="showModal();" ><small>Alerts</small></a>
                     </div>
                 </li>
                 {% endif %}
                 <li class="nav-item {% if 'about' in request.path %} active {% endif%}">
-                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                    <a class="nav-link" href="{% url 'about' %}" onclick="showModal();" >About</a>
                 </li>
                 <li class="nav-item {% if 'contacts' in request.path %} active {% endif%}">
-                    <a class="nav-link" href="{% url 'contacts' %}">Contacts</a>
+                    <a class="nav-link" href="{% url 'contacts' %}" onclick="showModal();" >Contacts</a>
                 </li>
             </ul>
         </div>
@@ -98,8 +101,22 @@
     </div>
 </div>
 
-
-
+<div class="modal fade" tabindex="-1" role="dialog" id="spinnerModal">
+    <div class="modal-dialog modal-dialog-centered text-center" role="document">
+        <div class="modal-body">
+            <h1 class="text-white">Wait while loading...</h1>
+            <div class="spinner-border text-info"
+                 style="width: 5rem; height: 5rem;"
+                 role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <h3 class="text-white">It may take a long time</h3>
+        </div>
+    </div>
+</div>
+<script>
+    hideModal();
+</script>
 
 
 </body>

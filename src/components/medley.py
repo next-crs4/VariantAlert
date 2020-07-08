@@ -34,6 +34,7 @@ def json2flat(dictionary):
 
     return OrderedDict(sorted(dictionary.items()))
 
+
 def build_query(query):
     if not isinstance(query, dict):
         query = dict(chromosome=query.chromosome,

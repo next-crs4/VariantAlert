@@ -19,13 +19,15 @@
             {% endfor %}
         </div>
         
-        <div class="form-group col-sm-8">
-            <label class="col-form-label text-primary" for="{{ form.csv_file.id_for_label }}">
-              {{ form.csv_file.label }}  
+        <div class="col-sm-8 mt-2 mt-4">
+        <div class="custom-file mt-2">
+            <input type="file" class="custom-file-input"
+                    id="{{ form.csv_file.id_for_label }}" name="{{ form.csv_file.name }}">
+            <label class="custom-file-label" for="{{ form.csv_file.id_for_label }}">
+              {{ form.csv_file.label }}
             </label>
-            <input type="file" class="form-control-file" aria-describedby="fileHelp" 
-                id="{{ form.csv_file.id_for_label }}" name="{{ form.csv_file.name }}">
 
+        </div>
             <small class="form-text text-warning">
                 {{ form.csv_file.help_text | safe }}
             </small>
@@ -35,8 +37,12 @@
                 <strong>Please, be careful!</strong><br>{{ error }}
             </div>
             {% endfor %}
- 
         </div>
     </div>
 </div>
-
+<script>
+$(".custom-file-input").on("change", function() {
+  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+});
+</script>

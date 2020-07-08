@@ -17,7 +17,7 @@ services:
     build: .
     container_name: dj01
     command: > 
-      bash -c "cd src && python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+      bash -c "cd src && python manage.py collectstatic --no-input && python manage.py makemigrations --no-input && python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/code
     expose:
