@@ -5,43 +5,23 @@
 {% block title %}History{% endblock %}
 
 {% block content %}
-<div class='row mt-4 mx-auto mb-3'>
+<div class='row mt-2 mx-auto'>
     <div class="center">
 
         {% if queries %}
         {% autopaginate queries 10 %}
 
-
-        <div class="row mb-3">
+        <div class="row">
             <table class="table table-hover table-striped " style="width:60rem;"
                    data-toggle="table"
                    {% if queries|length > 5 %}
-                    data-height="400"
+                    data-height="500"
                    {%endif %}
                    data-search-align="right"
                    data-search="true">
                 <thead>
                 <tr class="table-primary border-primary text-center">
-                    <th data-sortable="true" class="border-bottom border-primary">
-
-                        <ul class=" nav nav-pills">
-                            <li class="nav-item">
-                                <span class="nav-link active">
-                                {% if queries|length == 10 %}
-                                    {% if request.GET.page %}
-                                {% widthratio queries|length 1 request.GET.page %}
-                                {% else %}
-                                {{ queries|length }}
-                                {% endif %}
-                                {% else %}
-
-                                {{ num_total }}
-                                {% endif %}
-                                / {{ num_total }}
-                                </span>
-                            </li>
-                        </ul>
-                    </th>
+                    <th data-sortable="true" class="border-bottom border-primary">&nbsp;</th>
                     <th data-sortable="true" class="border-bottom border-primary">Label</th>
                     <th data-sortable="true" class="border-bottom border-primary">Query</th>
                     <th data-sortable="true" class="border-bottom border-primary">Assembly</th>
@@ -54,8 +34,7 @@
                 {% for query in queries %}
                 <tr class="text-left">
                     <td class="border-bottom border-primary">
-                        <div class="row">
-                            <div class="col-3">
+                            <span>
                                <button class="btn btn-sm btn-outline-success" onclick="details('{{ query.id }}');">
                                     {% if request.GET.page %}
                                     {{ request.GET.page|sub:1|mul:10|add:forloop.counter }}
@@ -63,15 +42,17 @@
                                     {{ forloop.counter }}
                                     {% endif %}
                                 </button>
-                            </div>
-                            <div class="col-2">
+                            </span>
+                            <span>
                                <button class="btn btn-sm btn-outline-danger" onclick="erase('{{ query.id }}');">
                                    <span class="fa fa-trash" aria-hidden="true"></span>
                                 </button>
-                            </div>
-                        </div>
-
-
+                            </span>
+                            <span>
+                               <button class="btn btn-sm btn-outline-primary" onclick="download('{{ query.id }}');">
+                                   <span class="fa fa-download" aria-hidden="true"></span>
+                                </button>
+                            </span>
                     </td>
                     <td class="border-bottom border-primary">{{ query.label }}</td>
                     <td class="border-bottom border-primary">{{ query.query }}</td>
@@ -88,65 +69,34 @@
                 </tbody>
             </table>
         </div>
-        <form method="get" id="form-queries" action="">
-            {% csrf_token %}
-            <fieldset>
-                <div class="row col-sm-12 mt-2">
-                    <div class="col-sm-2 text-left">
+
+                <div class="row mt-2">
+
+                    <div class="col-sm-10">
+                       <ul class="nav nav-pills">
+                            <li class="nav-item">
+                                <span class="nav-link active">
+                                {% if queries|length == 10 %}
+                                    {% if request.GET.page %}
+                                {% widthratio queries|length 1 request.GET.page %}
+                                {% else %}
+                                {{ queries|length }}
+                                {% endif %}
+                                {% else %}
+
+                                {{ num_total }}
+                                {% endif %}
+                                / {{ num_total }}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                   <div class="col-sm-2">
                        <div>{% paginate %}</div>
-                    </div>
-                    <div class="col-sm-3">
-                        <select id="search_for" name="search_for" class="custom-select custom-select-sm border-info">
-                            <option value="" {%if request.GET and request.GET.search_for == "" %}selected="" {%endif%}>
-                            Show all labels
-                            </option>
-                            {% for l in labels %}
-                            <option value="{{ l }}" {%if request.GET and request.GET.search_for == l %}selected="" {%endif%}>
-                                {{ l }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-sm-3">
-                        <select id="sort_by" name="sort_by" class="custom-select custom-select-sm border-info">
-                            <option value="" {%if request.GET and request.GET.sort_by == "date" %}selected="" {%endif%}>
-                            Sort by Date
-                            </option>
-                            <option value="label"
-                                    {%if request.GET and request.GET.sort_by == "label" %}selected="" {%endif%}>
-                            Label (ascending)
-                            </option>
-                            <option value="-label"
-                                    {%if request.GET and request.GET.sort_by == "-label" %}selected="" {%endif%}>
-                            Label (descending)
-                            </option>
-                            <option value="-date"
-                                    {%if request.GET and request.GET.sort_by == "-date" %}selected="" {%endif%}>
-                            Date (descending)
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-sm-2">
-                        <select id="show" name="show" class="custom-select custom-select-sm border-info">
-                            <option value=""
-                                    {%if request.GET and request.GET.show == "" %}selected="" {%endif%}>
-                            Show all
-                            </option>
-                            <option value="only_alerts"
-                                    {%if request.GET and request.GET.show == "only_alerts" %}selected="" {%endif%}>
-                            Only alerts
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-lg-2 text-right">
-                        <button class="btn btn-sm   btn-outline-success"
-                                onclick="apply_filter();">Apply Filters
-                        </button>
                     </div>
 
                 </div>
-            </fieldset>
-            </form>
+
             {% else %}
             <div class="alert alert-dismissible alert-info" style="width:70rem">
                 <h1 class="alert-heading">Warning!</h1>
