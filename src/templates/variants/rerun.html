@@ -1,1 +1,15 @@
- {% include "variants/details.html" %}
+<!-- templates/variants/rerun.html -->
+{% extends 'base.html' %}
+
+{% block title %}ReRun{% endblock %}
+
+{% block content %}
+<script>
+{% if query %}
+    details({{ query.id }});
+{% else %}
+    goto('/variants/history');
+{% endif %}
+</script>
+
+{% endblock %}
