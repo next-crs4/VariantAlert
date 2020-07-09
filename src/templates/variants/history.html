@@ -5,24 +5,91 @@
 {% block title %}History{% endblock %}
 
 {% block content %}
-<div class='row mt-4 mx-auto'>
+<div class='row mt-4 mx-auto mb-3'>
     <div class="center">
-        <h2 class="text-right text-primary">
-            {% if request.GET and request.GET.show == "only_alerts" %}
-                Only your alerts
-            {% else %}
-                All your queries
-            {% endif %}
-        </h2>
 
-        <hr class="my-2">
         {% if queries %}
         {% autopaginate queries 10 %}
 
+
+        <div class="row mb-3">
+            <table class="table table-hover table-striped " style="width:60rem;"
+                   data-toggle="table"
+                    data-height="400"
+                   data-search-align="right"
+                   data-search="true">
+                <thead>
+                <tr class="table-primary border-primary text-center">
+                    <th data-sortable="true" class="border-bottom border-primary">
+
+                        <ul class=" nav nav-pills">
+                            <li class="nav-item">
+                                <span class="nav-link active">
+                                {% if queries|length == 10 %}
+                                    {% if request.GET.page %}
+                                {% widthratio queries|length 1 request.GET.page %}
+                                {% else %}
+                                {{ queries|length }}
+                                {% endif %}
+                                {% else %}
+
+                                {{ num_total }}
+                                {% endif %}
+                                / {{ num_total }}
+                                </span>
+                            </li>
+                        </ul>
+                    </th>
+                    <th data-sortable="true" class="border-bottom border-primary">Label</th>
+                    <th data-sortable="true" class="border-bottom border-primary">Query</th>
+                    <th data-sortable="true" class="border-bottom border-primary">Assembly</th>
+                    <th data-sortable="true" class="border-bottom border-primary">Created</th>
+                    <th data-sortable="true" class="border-bottom border-primary">Changed</th>
+                    <th data-sortable="true" class="border-bottom border-primary text-info text-center">Alerts</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for query in queries %}
+                <tr class="text-left">
+                    <td class="border-bottom border-primary">
+                        <div class="row">
+                            <div class="col-3">
+                               <button class="btn btn-sm btn-outline-success" onclick="details('{{ query.id }}');">
+                                    {% if request.GET.page %}
+                                    {{ request.GET.page|sub:1|mul:10|add:forloop.counter }}
+                                    {% else %}
+                                    {{ forloop.counter }}
+                                    {% endif %}
+                                </button>
+                            </div>
+                            <div class="col-2">
+                               <button class="btn btn-sm btn-outline-danger" onclick="erase('{{ query.id }}');">
+                                   <span class="fa fa-trash" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+
+
+                    </td>
+                    <td class="border-bottom border-primary">{{ query.label }}</td>
+                    <td class="border-bottom border-primary">{{ query.query }}</td>
+                    <td class="border-bottom border-primary">{{ query.assembly }}</td>
+                    <td class="border-bottom border-primary">{{ query.date }}</td>
+                    <td class="border-bottom border-primary">{{ query.update }}</td>
+                    <td class="border-bottom border-primary text-center {% if query.difference  %}bg-info {% endif %} my-auto">
+                    {% if query.difference %}
+                    <span class="fas fa-flag text-white" aria-hidden="true"></span>
+                    {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
         <form method="get" id="form-queries" action="">
             {% csrf_token %}
             <fieldset>
-                <div class="row col-sm-12 mt-3 mb-2">
+                <div class="row col-sm-12 mt-2">
                     <div class="col-sm-2 text-left">
                        <div>{% paginate %}</div>
                     </div>
@@ -77,74 +144,7 @@
 
                 </div>
             </fieldset>
-        </form>
-        <div class="row">
-            <table class="table table-hover text-center border border-primary" style="width:60rem;">
-                <tr class="text-left table-primary border-bottom border-primary">
-                    <th class="border-bottom border-primary">
-
-                        <ul class=" nav nav-pills">
-                            <li class="nav-item">
-                                <span class="nav-link active">
-                                {% if queries|length == 10 %}
-                                    {% if request.GET.page %}
-                                {% widthratio queries|length 1 request.GET.page %}
-                                {% else %}
-                                {{ queries|length }}
-                                {% endif %}
-                                {% else %}
-
-                                {{ num_total }}
-                                {% endif %}
-                                / {{ num_total }}
-                                </span>
-                            </li>
-                        </ul>
-                    </th>
-                    <th class="border-bottom border-primary">Label</th>
-                    <th class="border-bottom border-primary">Query</th>
-                    <th class="border-bottom border-primary">Assembly</th>
-                    <th class="border-bottom border-primary">Created</th>
-                    <th class="border-bottom border-primary">Changed</th>
-                    <th class="border-bottom border-primary text-info text-center">Alerts</th>
-                </tr>
-                {% for query in queries %}
-                <tr class="text-left {% if forloop.counter|divisibleby:'2' %}table-secondary{% else %}table-light{% endif %}">
-                    <td class="border-bottom border-primary">
-                        <div class="row">
-                            <div class="col-3">
-                               <button class="btn btn-sm btn-outline-success" onclick="details('{{ query.id }}');">
-                                    {% if request.GET.page %}
-                                    {{ request.GET.page|sub:1|mul:10|add:forloop.counter }}
-                                    {% else %}
-                                    {{ forloop.counter }}
-                                    {% endif %}
-                                </button>
-                            </div>
-                            <div class="col-2">
-                               <button class="btn btn-sm btn-outline-danger" onclick="erase('{{ query.id }}');">
-                                   <span class="fa fa-trash" aria-hidden="true"></span>
-                                </button>
-                            </div>
-                        </div>
-
-
-                    </td>
-                    <td class="border-bottom border-primary">{{ query.label }}</td>
-                    <td class="border-bottom border-primary">{{ query.query }}</td>
-                    <td class="border-bottom border-primary">{{ query.assembly }}</td>
-                    <td class="border-bottom border-primary">{{ query.date }}</td>
-                    <td class="border-bottom border-primary">{{ query.update }}</td>
-                    <td class="border-bottom border-primary text-center {% if query.difference  %}bg-info {% endif %} my-auto">
-                    {% if query.difference %}
-                    <span class="fas fa-flag text-white" aria-hidden="true"></span>
-                    {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-
+            </form>
             {% else %}
             <div class="alert alert-dismissible alert-info" style="width:70rem">
                 <h1 class="alert-heading">Warning!</h1>

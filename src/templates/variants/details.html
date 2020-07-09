@@ -74,68 +74,98 @@
                         <a class="nav-link" data-toggle="tab" href="#diff">Difference</a>
                     </li>
                 </ul>
-                <div id="myTabContent" class="tab-content">
-                    <div class="tab-pane fade bg-white" id="old">
-                       {% if query.previous %}
-                        <div class="row col--12 table-primary my-2 mx-2" style="height:3em">
-                            <div class="col-1 my-auto">&nbsp;</div>
-                            <div class="col-5 my-auto"><strong>Field</strong></div>
-                            <div class="col-3 my-auto"><strong>Value</strong></div>
-                        </div>
-                       {% for k,v in query.previous.items %}
-                        <div class="row col--12 my-2 mx-2 {% if forloop.counter|divisibleby:'2' %}bg-light{% endif %}"
-                            style="{% if forloop.counter|divisibleby:'2' %} height:3em {% else %} height:2em {% endif %}" >
-                            <div class="col-1 my-auto">{{ forloop.counter }}</div>
-                            <div class="col-5 my-auto">{{ k }}</div>
-                            <div class="col-3 my-auto">{{ v }}</div>
-                        </div>
-                           {% endfor %}
-                        {% else %}
-                       <div class="alert alert-dismissible alert-secondary mx-2 my-2">
-                            <h1><strong>Query did not return result</strong></h1>
-                        </div>
-                        {% endif %}
-                       </div>
-                    <div class="tab-pane fade show active bg-white" id="new">
+                <div id="myTabContent" class="tab-content" style="min-height:35rem;">
+
+                    <div class="tab-pane fade show active px-2 py-2" id="new">
                         {% if query.result %}
-                    <div class="row col--12 table-primary my-2 mx-2" style="height:3em">
-                            <div class="col-1 my-auto">&nbsp;</div>
-                            <div class="col-5 my-auto"><strong>Field</strong></div>
-                            <div class="col-3 my-auto"><strong>Value</strong></div>
-                        </div>
-                       {% for k,v in query.result.items %}
-                        <div class="row col--12 my-2 mx-2 {% if forloop.counter|divisibleby:'2' %} bg-light {% endif %}"
-                             style="{% if forloop.counter|divisibleby:'2' %} height:3em {% else %} height:2em {% endif %}" >
-                            <div class="col-1 my-auto">{{ forloop.counter }}</div>
-                            <div class="col-5 my-auto">{{ k }}</div>
-                            <div class="col-3 my-auto">{{ v }}</div>
-                        </div>
-                           {% endfor %}
+                        <table class="table table-hover table-striped border-primary mb-5"
+                               data-toggle="table"
+                               data-height="450"
+                               data-search-align="right"
+                               data-search="true">
+                            <thead>
+                            <tr class="table-primary border border-primary">
+                                <th class="border-primary">&nbsp;</th>
+                                <th class="border-primary">Field</th>
+                                <th class="border-primary">Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for k,v in query.result.items %}
+                            <tr class="border-primary">
+                                <td class="border-primary">{{ forloop.counter }}</td>
+                                <td data-sortable="true" class="border-primary">{{ k }}</td>
+                                <td data-sortable="true" class="border-primary">{{ v }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
                        {% else %}
                        <div class="alert alert-dismissible alert-secondary mx-2 my-2">
                             <h1><strong>Query did not return result</strong></h1>
                         </div>
                         {% endif %}
                     </div>
-                    <div class="tab-pane fade" id="diff">
+                   <div class="tab-pane fade px-2 py-2" id="old">
+                       {% if query.previous %}
+                       <table class="table table-hover table-striped border-primary mb-5"
+                               data-toggle="table"
+                               data-height="450"
+                               data-search-align="right"
+                               data-search="true">
+                            <thead>
+                            <tr class="table-primary border border-primary">
+                                <th class="border-primary">&nbsp;</th>
+                                <th class="border-primary">Field</th>
+                                <th class="border-primary">Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for k,v in query.previous.items %}
+                            <tr class="border-primary">
+                                <td class="border-primary">{{ forloop.counter }}</td>
+                                <td data-sortable="true" class="border-primary">{{ k }}</td>
+                                <td data-sortable="true" class="border-primary">{{ v }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                       <div class="alert alert-dismissible alert-secondary mx-2 my-2">
+                            <h1><strong>Query did not return result</strong></h1>
+                        </div>
+                        {% endif %}
+                       </div>
+                    <div class="tab-pane fade px-2 py-2" id="diff">
                         {% if query.difference %}
-                       <div class="row col--12 table-primary my-2 mx-2" style="height:3em">
-                            <div class="col-1 my-auto">&nbsp;</div>
-                            <div class="col-5 my-auto"><strong>Field</strong></div>
-                            <div class="col-2 my-auto"><strong>Type</strong></div>
-                            <div class="col-2 my-auto"><strong>Previous</strong></div>
-                            <div class="col-2 my-auto"><strong>Current</strong></div>
-                        </div>
-                       {% for d in query.difference %}
-                        <div class="row col--12 my-2 mx-2 {% if forloop.counter|divisibleby:'2' %}bg-light{% endif %}"
-                            style="{% if forloop.counter|divisibleby:'2' %} height:3em {% else %} height:2em {% endif %}" >
-                            <div class="col-1 my-auto">{{ forloop.counter }}</div>
-                            <div class="col-5 my-auto">{{ d.field }}</div>
-                            <div class="col-2 my-auto">{{ d.type }}</div>
-                            <div class="col-2 my-auto">{{ d.previous }}</div>
-                            <div class="col-2 my-auto">{{ d.current }}</div>
-                        </div>
-                           {% endfor %}
+                       <table class="table table-hover table-striped border-primary mb-5"
+                               data-toggle="table"
+                               data-height="450"
+                               data-search-align="right"
+                               data-search="true">
+                            <thead>
+                            <tr class="table-primary border border-primary">
+                                <th class="border-primary">&nbsp;</th>
+                                <th class="border-primary">Field</th>
+                                <th class="border-primary">Type</th>
+                                <th class="border-primary">Previous</th>
+                                <th class="border-primary">Current</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for d in query.difference %}
+                            <tr class="border-primary">
+                                <td class="border-primary">{{ forloop.counter }}</td>
+                                <td data-sortable="true" class="border-primary">{{ d.field }}</td>
+                                <td data-sortable="true" class="border-primary">{{ d.type }}</td>
+                                <td data-sortable="true" class="border-primary">{{ d.previous }}</td>
+                                <td data-sortable="true" class="border-primary">{{ d.current }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
                         {% else %}
                         <div class="alert alert-dismissible alert-secondary mx-2 my-2">
                             <h1><strong>Nothing is changed</strong></h1>
@@ -154,12 +184,12 @@
 
 <div class="alert alert-dismissible alert-danger mt-4" style="width:100rem">
     <h1 class="alert-heading">404</h1>
-    <p class="mb-2">
-    <h2>OPS! Page not found!</h2></p>
+        <h2>OPS! Page not found!</h2>
     <h3>The page you are looking for doesn't exist:
         <a href="{% url 'home' %}">Come back home!</a>
     </h3>
-</div>{% endif %}
+</div>
+{% endif %}
 <div class="modal fade" tabindex="-1" role="dialog" id="spinnerModal">
     <div class="modal-dialog modal-dialog-centered text-center" role="document">
         <div class="modal-body">
