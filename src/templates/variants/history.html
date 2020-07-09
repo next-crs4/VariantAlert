@@ -15,7 +15,9 @@
         <div class="row mb-3">
             <table class="table table-hover table-striped " style="width:60rem;"
                    data-toggle="table"
+                   {% if queries|length > 5 %}
                     data-height="400"
+                   {%endif %}
                    data-search-align="right"
                    data-search="true">
                 <thead>
