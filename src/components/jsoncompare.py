@@ -77,19 +77,6 @@ class Diff(object):
       self.seen.append(diff_message)
       self.difference.append((type_, diff_message))
 
-def compare(json1, json2):
-  json1 = json.loads(json1) if isinstance(json1, str) else json1
-  json2 = json.loads(json2) if isinstance(json2, str) else json2
-  diff1 = Diff(json1, json2, True).difference
-  diff2 = Diff(json2, json1, False).difference
-  diffs = []
-  for type, message in diff1:
-    newType = 'CHANGED'
-    if type == PATH:
-      newType = 'REMOVED'
-    diffs.append({'type': newType, 'message': message.replace("'","")})
-  for type, message in diff2:
-    diffs.append({'type': 'ADDED', 'message': message.replace("'","")})
-  return diffs
+
 
 

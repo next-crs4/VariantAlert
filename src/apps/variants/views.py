@@ -8,10 +8,10 @@ from django.utils.timezone import now
 
 from . import models
 import json
+import tempfile
 
-from components.jsoncompare import compare
 from components.variants import Variants
-from components.medley import build_query, ret_query
+from components.toolkit import Toolkit
 from components.readers import CSVReader
 
 
@@ -33,7 +33,7 @@ class Query(LoginRequiredMixin, generic.CreateView):
         csv_file = form.cleaned_data['csv_file']
 
         if not csv_file:
-            query.query = build_query(query)
+            query.query = Toolkit.build_query(query)
             query.result = v.get_variant(query=query.query,
                                          assembly=query.assembly,
                                          fields=query.fields)
@@ -51,9 +51,9 @@ class Query(LoginRequiredMixin, generic.CreateView):
                     assembly=row.get('assembly'),
                     variant_ref=row.get('variant_reference'),
                     variant_alt=row.get('variant_alternate'),
-                    query=build_query(row),
+                    query=Toolkit.build_query(row),
                     fields=query.fields,
-                    result=v.get_variant(query=build_query(row),
+                    result=v.get_variant(query=Toolkit.build_query(row),
                                          assembly=row.get('assembly'),
                                          fields=query.fields),
                     user_id=self.request.user.id,
@@ -67,17 +67,11 @@ class History(LoginRequiredMixin, generic.base.TemplateView):
      
     def get_queries(self, user_id, _filter=None):
         queries = models.QueryModel.objects.filter(user_id=user_id)
-        
-        if 'search_for' in _filter and _filter.get('search_for'):
-            queries = queries.filter(label=_filter.get('search_for'))
-        
-        if 'sort_by' in _filter and _filter.get('sort_by'):
-            queries = queries.order_by(_filter.get('sort_by'))
 
         if 'show' in _filter and 'alerts' in _filter.get('show'):
             queries = queries.exclude(difference=list()).exclude(difference=json.dumps(list()))
 
-        return [ret_query(q) for q in queries]
+        return [Toolkit.ret_query(q) for q in queries]
 
     def get_context_data(self, **kwargs):
         context = super(History, self).get_context_data(**kwargs)
@@ -104,7 +98,7 @@ class Details(LoginRequiredMixin, generic.base.TemplateView):
                 return None
         except Exception as e:
             return None
-        return ret_query(query)
+        return Toolkit.ret_query(query)
 
     def get_context_data(self, **kwargs):
         context = super(Details, self).get_context_data(**kwargs)
@@ -130,12 +124,12 @@ class Rerun(LoginRequiredMixin, generic.base.TemplateView):
         if query:
             query.previous = query.result
             query.result = v.get_variant(query.query, query.assembly, query.fields)
-            query.difference = compare(query.previous, query.result)
+            query.difference = Toolkit.compare(query.previous, query.result)
             query.date = query.date
             if query.difference:
                 query.update = now()
             query.save()
-            return ret_query(query)
+            return Toolkit.ret_query(query)
         return query
 
     def get_context_data(self, **kwargs):
@@ -167,3 +161,5 @@ class Delete(LoginRequiredMixin, generic.base.TemplateView):
         context = super(Delete, self).get_context_data(**kwargs)
         context['deleted'] = self.delete(context.get('query_id'))
         return  context
+
+

@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from apps.variants.models import QueryModel
 
 from components.variants import Variants
-from components.jsoncompare import compare
+from components.toolkit import Toolkit
 from django.utils.timezone import now
 
 
@@ -71,12 +71,12 @@ class QueryCronJob(CronJobBase):
                 self.logger.info('Checking for changes in the query {} - {}'.format(q.label, q.query))
                 q.previous = q.result
                 q.result = v.get_variant(q.query, q.assembly, q.fields)
-                q.difference = compare(q.previous, q.result)
+                q.difference = Toolkit().compare(q.previous, q.result)
                 q.date = q.date
                 if q.difference:
                     self.logger.info('ALERT - Found change for query {} - {}'.format(q.label, q.query))
                     q.update = now()
-                    #q.save()
+                    q.save()
                     alerts.append(q)
                 else:
                     self.logger.info('Nothing is changed for query {} - {}'.format(q.label, q.query))
