@@ -1,21 +1,3 @@
-function syntaxHighlight(json) {
-    json = json.replace(/\\"/g,'"');
-    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-            } else {
-                cls = 'string';
-            }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
-        }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
-}
 
 function prettyJson(id, _json){
    this.obj = (_json === undefined || _json === null)?JSON.parse($(id).html().replace('&gt;','>')):JSON.parse(_json);
@@ -38,8 +20,10 @@ function showModal(id){
     $(id).modal('show');
 }
 
-function goto(url){
-    showModal();
+function goto(url, nomodal){
+    if (nomodal === undefined) {
+        showModal();
+    }
     window.location.href = url;
 }
 
@@ -60,6 +44,7 @@ function apply_filter(){
 }
 
 function details(id) {
+    showModal();
     this.url = "/variants/query/"+id;
     goto(url);
 }
@@ -68,4 +53,9 @@ function erase(id) {
     showModal();
     this.url = "/variants/query/"+id+"/delete";
     goto(url);
+}
+
+function download(id) {
+    this.url = "/variants/query/"+id+"/download";
+    goto(url, 1);
 }

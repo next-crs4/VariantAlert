@@ -2,17 +2,19 @@
 from . import forms
 from django.urls import reverse_lazy
 from django.views import generic
-from django.http import HttpResponseRedirect
+from django.views import View
+
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.timezone import now
 
 from . import models
 import json
-import tempfile
 
 from components.variants import Variants
 from components.toolkit import Toolkit
 from components.readers import CSVReader
+from components.writers import xlsxWriter
 
 
 class Query(LoginRequiredMixin, generic.CreateView):
@@ -163,3 +165,28 @@ class Delete(LoginRequiredMixin, generic.base.TemplateView):
         return  context
 
 
+class Download(LoginRequiredMixin, generic.base.View):
+
+    def get_query(self, query_id):
+        try:
+            query = models.QueryModel.objects.get(pk=query_id)
+            if query.user_id != self.request.user.id:
+                return None
+        except Exception as e:
+            return None
+        return query
+
+    def get(self, request, *args, **kwargs):
+        query_id = kwargs.get('query_id')
+        query = Toolkit.ret_query(self.get_query(query_id))
+        response = HttpResponse(
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        )
+        response['Content-Disposition'] = 'attachment; filename={date}-{label}.xlsx'.format(
+            date=now().strftime('%Y-%m-%d'),label=query.label
+        )
+
+        workbook = xlsxWriter(query)
+        workbook.do()
+        workbook.save(response)
+        return response

@@ -6,3 +6,4 @@ django_cron
 django-pagination-bootstrap<2
 gunicorn
 django-mathfilters
+openpyxl==2.6.0

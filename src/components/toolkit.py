@@ -1,5 +1,6 @@
 from . import jsoncompare
 
+import tempfile
 import json
 from collections import OrderedDict
 from itertools import chain, starmap
@@ -27,6 +28,14 @@ class Toolkit(object):
             'chromosome']
         return query['chromosome'] + ':' + 'g.' + str(query['position']) + query['variant_reference'] + '>' + query[
             'variant_alternate']
+    # @staticmethod
+    # def dump(query):
+    #     #ofile = tempfile.NamedTemporaryFile()
+    #     ofile = "/tmp/prova.xlsx"
+    #     q = Toolkit.ret_query(query)
+    #     df = pd.DataFrame(q.result, index=[0])
+    #     df.to_excel(ofile, index=False, engine="xlsxwriter")
+    #     return ofile
 
     @staticmethod
     def compare(json1, json2):
