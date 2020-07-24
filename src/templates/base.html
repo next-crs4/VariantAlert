@@ -93,12 +93,25 @@
     <div class="row justify-content-center mt-5">
         {% block content %}(no content){% endblock %}
     </div>
-    <div class="row justify-content-center">
-        <img src="{% static 'images/CRS4-colori-small.png' %}">
+    <div class="row">
+        <div class="col-sm-3">&nbsp;</div>
+        <div class="col-sm-3 mx-auto">
+            <a href="http://www.crs4.it/" target="_blank">
+                <img src="{% static 'images/CRS4-colori-small.png' %}">
+            </a>
+        </div>
+
+        <div class="col-sm-3 mx-auto my-3">
+            <a href="https://myvariant.info" target="_blank">
+                <img src="{% static 'images/powered-by-myvariant.png' %}" width="200">
+            </a>
+        </div>
+        <div class="col-sm-3">&nbsp;</div>
     </div>
-    <div class="row justify-content-center mt-2 mb-2">
-        <small>Powered by <a class="link" target="_blank"
-                             href="https://myvariant-py.readthedocs.io/en/latest">MyVariant.py</a></small>
+    <div class="row justify-content-center">
+        Powered by &nbsp;
+        <a class="link" target="_blank"
+           href="https://myvariant-py.readthedocs.io/en/latest">MyVariant.py</a>
     </div>
 </div>
 
