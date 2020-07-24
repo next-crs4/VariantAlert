@@ -69,6 +69,14 @@ class History(LoginRequiredMixin, generic.base.TemplateView):
      
     def get_queries(self, user_id, _filter=None):
         queries = models.QueryModel.objects.filter(user_id=user_id)
+        if 'search_for' in _filter and _filter.get('search_for'):
+            queries = queries.filter(label=_filter.get('search_for'))
+
+        if 'sort_by' in _filter and _filter.get('sort_by'):
+            queries = queries.order_by(_filter.get('sort_by'))
+
+        if 'show' in _filter and 'alerts' in _filter.get('show'):
+            queries = queries.exclude(difference=list()).exclude(difference=json.dumps(list()))
 
         if 'show' in _filter and 'alerts' in _filter.get('show'):
             queries = queries.exclude(difference=list()).exclude(difference=json.dumps(list()))
