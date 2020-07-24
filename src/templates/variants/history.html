@@ -9,78 +9,85 @@
     <div class="center">
 
         {% if queries %}
-        {% autopaginate queries 10 %}
+        {% autopaginate queries 25 %}
 
         <div class="row">
-            <table class="table table-hover table-striped " style="width:60rem;"
-                   data-toggle="table"
-                   {% if queries|length > 5 %}
-                    data-height="500"
-                   {%endif %}
-                   data-search-align="right"
-                   data-search="true">
-                <thead>
-                <tr class="table-primary border-primary text-center">
-                    <th data-sortable="true" class="border-bottom border-primary">
-                        <ul class="nav nav-pills">
-                            <li class="nav-item">
-                                <span class="nav-link active">
-                                {% if queries|length == 10 %}
-                                    {% if request.GET.page %}
-                                {% widthratio queries|length 1 request.GET.page %}
-                                {% else %}
-                                {{ queries|length }}
-                                {% endif %}
-                                {% else %}
+            <table class="table table-hover table-striped table-sm mx-auto" style="width:70rem;"
+                    data-toggle="table"
 
-                                {{ num_total }}
-                                {% endif %}
-                                / {{ num_total }}
-                                </span>
-                            </li>
-                        </ul>
+                    data-search-align="right"
+                    data-search="true"
+                    data-buttons-align="left"
+                    data-show-columns="true"
+                    data-show-fullscreen="true"
+                    data-buttons-class="primary">
+                <thead>
+                <tr class="table-primary border-primary text-center table-sm">
+                    <th  class="bg-primary border-bottom border-primary text-white" data-width="115" >
+                                    {% if queries|length == 25 %}
+                                        {% if request.GET.page %}
+                                    {% widthratio queries|length 1 request.GET.page %}
+                                    {% else %}
+                                    {{ queries|length }}
+                                    {% endif %}
+                                    {% else %}
+
+                                    {{ num_total }}
+                                    {% endif %}/ {{ num_total }}
+
                     </th>
-                    <th data-sortable="true" class="border-bottom border-primary">Label</th>
-                    <th data-sortable="true" class="border-bottom border-primary">Query</th>
-                    <th data-sortable="true" class="border-bottom border-primary">Assembly</th>
-                    <th data-sortable="true" class="border-bottom border-primary">Created</th>
-                    <th data-sortable="true" class="border-bottom border-primary">Changed</th>
-                    <th data-sortable="true" class="border-bottom border-primary text-info text-center">Alerts</th>
+                    <th data-sortable="true" class="bg-primary text-white border-bottom border-primary">Label</th>
+                    <th data-sortable="true" class="bg-primary text-white border-bottom border-primary">Query</th>
+                    <th data-sortable="true" class="bg-primary text-white border-bottom border-primary">Assembly</th>
+                    <th data-sortable="true" class="bg-primary text-white border-bottom border-primary">Created</th>
+                    <th data-sortable="true" class="bg-primary text-white border-bottom border-primary">Changed</th>
+                    <th data-sortable="true" class="bg-primary text-white border-bottom border-primary">Alerts</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for query in queries %}
                 <tr class="text-left">
-                    <td class="border-bottom border-primary">
-                            <span>
-                               <button class="btn btn-sm btn-outline-success" onclick="details('{{ query.id }}');">
+                    <td class="border-bottom border-primary" data-width="115">
+                            <div class="row">
+                                <div class="col-sm-1 text-primary font-weight-bold">
+
                                     {% if request.GET.page %}
-                                    {{ request.GET.page|sub:1|mul:10|add:forloop.counter }}
+                                    {{ request.GET.page|sub:1|mul:25|add:forloop.counter }}
                                     {% else %}
                                     {{ forloop.counter }}
                                     {% endif %}
-                                </button>
-                            </span>
-                            <span>
-                               <button class="btn btn-sm btn-outline-danger" onclick="erase('{{ query.id }}');">
-                                   <span class="fa fa-trash" aria-hidden="true"></span>
-                                </button>
-                            </span>
-                            <span>
-                               <button class="btn btn-sm btn-outline-primary" onclick="download('{{ query.id }}');">
-                                   <span class="fa fa-download" aria-hidden="true"></span>
-                                </button>
-                            </span>
+                                </div>
+                                 <div class="col-sm-1">
+                                  <a href="#" onclick="details('{{ query.id }}');">
+                                       <span class="fa fa-eye text-success" aria-hidden="true "></span>
+                                    </a>
+                                </div>
+                                <div class="col-sm-1">
+                                   <a href="#" onclick="erase('{{ query.id }}');">
+                                       <span class="fa fa-trash text-danger" aria-hidden="true "></span>
+                                    </a>
+                                </div>
+                                <div class="col-sm-1 text-info">
+                                   <a href="#" onclick="download('{{ query.id }}');">
+                                       <span class="fa fa-download"></span>
+                                    </a>
+                                </div>
+                            </div>
+
+
+
                     </td>
                     <td class="border-bottom border-primary">{{ query.label }}</td>
                     <td class="border-bottom border-primary">{{ query.query }}</td>
                     <td class="border-bottom border-primary">{{ query.assembly }}</td>
                     <td class="border-bottom border-primary">{{ query.date }}</td>
                     <td class="border-bottom border-primary">{{ query.update }}</td>
-                    <td class="border-bottom border-primary text-center {% if query.difference  %}bg-info {% endif %} my-auto">
+                    <td class="border-bottom border-primary text-center {% if query.difference  %}bg-primary {% endif %} my-auto">
+                        <small>
                         {% if query.difference %}
-                    <span class="fas fa-flag text-white" aria-hidden="true"></span>
-                    {% endif %}
+                            <span class="fas fa-flag text-white" aria-hidden="true"></span>
+                        {% endif %}
+                        </small>
                     </td>
                 </tr>
                 {% endfor %}
