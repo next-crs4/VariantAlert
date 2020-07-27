@@ -39,7 +39,9 @@
                             data-size="5"
                             data-style="btn-outline-info">
                         {% for s in sources %}
+                        {% if s != '_seqhashed' %}
                         <option value="{{ s }}">{{ s }}</option>
+                        {% endif %}
                     {% endfor %}
                     </select>
                     {% for error in form.sources.errors %}
