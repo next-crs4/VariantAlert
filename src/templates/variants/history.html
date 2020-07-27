@@ -100,10 +100,10 @@
             {% csrf_token %}
             <fieldset>
                 <div class="row col-sm-12 mt-3">
-                    <div class="col-sm-2 text-left">
+                    <div class="col-sm-4 text-left">
                        <div>{% paginate %}</div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <select id="search_for" name="search_for" class="custom-select custom-select-sm border-info">
                             <option value="" {%if request.GET and request.GET.search_for == "" %}selected="" {%endif%}>
                             Show all labels
@@ -115,22 +115,22 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <select id="sort_by" name="sort_by" class="custom-select custom-select-sm border-info">
                             <option value="" {%if request.GET and request.GET.sort_by == "date" %}selected="" {%endif%}>
                             Sort by Date
                             </option>
                             <option value="label"
                                     {%if request.GET and request.GET.sort_by == "label" %}selected="" {%endif%}>
-                            Label (ascending)
+                            Label (asc)
                             </option>
                             <option value="-label"
                                     {%if request.GET and request.GET.sort_by == "-label" %}selected="" {%endif%}>
-                            Label (descending)
+                            Label (desc)
                             </option>
                             <option value="-date"
                                     {%if request.GET and request.GET.sort_by == "-date" %}selected="" {%endif%}>
-                            Date (descending)
+                            Date (desc)
                             </option>
                         </select>
                     </div>
@@ -146,7 +146,7 @@
                             </option>
                         </select>
                     </div>
-                    <div class="col-lg-2 text-right">
+                    <div class="col-sm-2 text-right">
                         <button class="btn btn-sm   btn-outline-success"
                                 onclick="apply_filter();">Apply Filters
                         </button>
