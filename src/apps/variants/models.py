@@ -8,8 +8,9 @@ from django.utils.timezone import now
 # Create your models here.
 
 class QueryModel(models.Model):
-    chr_range = range(1, 22)
+    chr_range = range(1, 23)
     CHR_CHOICE = [('chr' + str(i), 'chr' + str(i)) for i in chr_range]
+    CHR_CHOICE.extend([('chrX', 'chrX'), ('chrY', 'chrY')])
 
     VARIANTS_CHOICE = [
         ('A', 'A'),
