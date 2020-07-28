@@ -27,9 +27,9 @@
             </div>
             <div class="row col-sm-12">
                 <div class="col-sm-4">
-                    <label class=" text-primary" for="sources">
+                    <label class="text-primary ml-2" for="sources">
                         Select sources for annotation:</label>
-                    <select class="selectpicker show-tick form-control"
+                    <select class="selectpicker show-tick form-control form-control-sm ml-2"
                             name="sources" id="sources"
                             multiple="multiple"
                             data-live-search="true"
@@ -67,13 +67,7 @@ hideModal();
 </script>
 <script>
     $(document).ready(function(){
-        $("#sources").change(function() {
-            console.log($("#{{ form.sources.id_for_label }}").val());
-
-        });
         $("#sources").selectpicker('selectAll');
-
-
     });
 </script>
 
