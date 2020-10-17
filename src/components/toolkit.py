@@ -5,6 +5,10 @@ import json
 from collections import OrderedDict
 from itertools import chain, starmap
 
+TYPE = 'TYPE'
+PATH = 'PATH'
+VALUE = 'VALUE'
+
 class Toolkit(object):
 
     @staticmethod

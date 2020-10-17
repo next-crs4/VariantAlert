@@ -25,7 +25,7 @@ class QueryCronJob(CronJobBase):
         base_url = os.path.join('http://'+settings.HOST, 'variants', 'query')
         for q in queries:
             url = os.path.join(base_url, str(q.id))
-            msgs = msgs + "\t" + " q.label " + " - " + q.query + " (Go to {} for details)\n".format(url)
+            msgs = msgs + "\t" + q.label + " - " + q.query + " (Go to {} for details)\n".format(url)
 
         subject = "VariantAlert updates - {}".format(now())
         body = "Dear {},\n".format(u.get('username')) \
@@ -60,12 +60,12 @@ class QueryCronJob(CronJobBase):
 
     def do(self):
         v = Variants()
-        alerts = list()
         self.logger = self.a_logger(self.__class__.__name__)
         self.logger.info('=== START ===')
         self.logger.info('Collecting Users...')
         for u in User.objects.values():
             self.logger.info("Collecting Queries for {} - {}".format(u.get('username'), u.get('email')))
+            alerts = list()
             queries = QueryModel.objects.filter(user_id=u.get('id'))
             for q in queries:
                 self.logger.info('Checking for changes in the query {} - {}'.format(q.label, q.query))
