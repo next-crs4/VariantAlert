@@ -74,16 +74,32 @@
         {% if user.is_authenticated %}
         <span class="navbar-brand"><small>Hi, {{ user.username }}!</small></span>
             <div class="form-inline my-2 my-lg-0">
-                <a class="btn btn-sm btn-danger my-2 my-sm-0 border-light{% if 'logout' in request.path %} active {% endif %}"
-                   href="{% url 'logout' %}">Logout</a>
+            <a class="btn btn-success my-2 my-sm-0 border-light"
+               href="{% url 'update_user' pk=user.id%}"
+               data-toggle="tooltip" data-placement="top" title="Edit user">
+                 <span class="fas fa-user-edit fa-sm text-white" aria-hidden="true"></span>
+            </a>
+            </div>
+            <div class="form-inline my-2 my-lg-0 ml-2">
+                <a class="btn btn-danger my-2 my-sm-0 border-light{% if 'logout' in request.path %} active {% endif %}"
+                   href="{% url 'logout' %}"
+                   data-toggle="tooltip" data-placement="top" title="Logout">
+                    <span class="fas fa-user-slash fa-sm text-white" aria-hidden="true"></span>
+                </a>
             </div>
             {% else %}
             <div class="form-inline my-2 my-lg-0">
-                <a class="btn btn-sm btn-success my-2 my-sm-0 border-light{% if 'login' in request.path %} active {% endif %}"
-                   href="{% url 'login' %}">Login</a>
-                <span class="text-white ml-3 mr-3">or</span>
-                <a class="btn btn-sm btn-success my-2 my-sm-0 border-light {% if 'signup' in request.path %} active {% endif %}"
-                   href="{% url 'signup' %}">Sign Up</a>
+                <a class="btn btn-success my-2 my-sm-0 border-light{% if 'login' in request.path %} active {% endif %}"
+                   href="{% url 'login' %}"
+                   data-toggle="tooltip" data-placement="top" title="Login">
+                    <span class="fas fa-sign-in-alt fa-sm text-white" aria-hidden="true"></span>
+                </a>
+                <span class="text-white ml-1 mr-1">&nbsp;</span>
+                <a class="btn  btn-success my-2 my-sm-0 border-light {% if 'signup' in request.path %} active {% endif %}"
+                   href="{% url 'signup' %}"
+                   data-toggle="tooltip" data-placement="top" title="Sign Up">
+                    <span class="fas fa-user-plus fa-sm text-white" aria-hidden="true"></span>
+                </a>
             </div>
         {% endif %}
     </nav>

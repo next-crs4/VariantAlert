@@ -1,12 +1,12 @@
-<!-- templates/signup.html -->
+<!-- templates/update.html -->
 {% extends 'base.html' %}
 
-{% block title %}Sign Up{% endblock %}
+{% block title %}Edit user{% endblock %}
 
 {% block content %}
 <div class="card border-primary mt-5 mb-5" style="width:30rem;">
     <div class="card-header bg-primary">
-        <h4 class="text-white">Sign Up</h4>
+        <h4 class="text-white">Edit user</h4>
     </div>
     <div class="card-body">
         <div class="card-text">
@@ -14,31 +14,32 @@
                 {% csrf_token %}
                 {% for field in form %}
                     <div class="form-group">
+                        {% if field.id_for_label|slice:':11' != 'id_password' %}
                         <span class="text-primary">{{ field.label_tag }}</span>
                         {{ field.widget }}
-                        <input type="{% if field.id_for_label|slice:':11' == 'id_password' %}password{% else  %}text{% endif %}"
-                               class="form-control form-control-sm border-info" name="{{ field.name }}"
+                        <input type="text"
+                               value="{{ field.value }}"
+                               class="form-control form-control border-info" name="{{ field.name }}"
+                               data-toggle="tooltip" data-placement="top" title="{{ field.help_text }}"
                                id="{{ field.id_for_label }}">
-                        {% if field.help_text %}
-                        <small class="text-warning">{{ field.help_text }}</small>
-                        {% endif %}
                         {% for error in field.errors %}
                         <div class="alert alert-dismissible alert-danger">
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <strong>Please, be careful!</strong> {{ error }}
                         </div>
                         {% endfor %}
+                        {% endif %}
                     </div>
                     {% endfor %}
-                    <div class="row">
-                        <div class="col-sm-9">&nbsp;</div>
-                        <div class="col-sm-3">
-                            <button class="btn btn-outline-success btn-block" type="submit">Sign Up</button>
-                        </div>
+                <div class="row">
+                    <div class="col-sm-9">&nbsp;</div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-outline-success btn-block" type="submit">Update</button>
                     </div>
+                </div>
             </form>
         </div>
         </form>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}

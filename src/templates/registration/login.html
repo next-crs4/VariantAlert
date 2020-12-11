@@ -3,7 +3,7 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<div class="card border-primary mt-5 mb-3" style="width:25rem;">
+<div class="card border-primary mt-5 mb-3" style="width:30rem;">
     <div class="card-header bg-primary">
         <h4 class="text-white">Login</h4>
     </div>
@@ -11,8 +11,9 @@
         <div class="card-text">
             <form method="post">
                 {% csrf_token %}
-                <div class="px-3">{% for field in form %}
-                    <div class="form-group py-2">
+
+                    {% for field in form %}
+                    <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text border border-info">
@@ -21,7 +22,7 @@
                                 </span>
                             </div>
                             <input type="{% if field.id_for_label == 'id_password' %}password{% else  %}text{% endif %}"
-                                   class="form-control form-control-sm border-info" id="{{ field.id_for_label }}"
+                                   class="form-control border-info" id="{{ field.id_for_label }}"
                                    placeholder="{{field.label}}" name="{{ field.name }}">
                             {% if field.help_text %}
                             <small class="text-warning">{{ field.help_text }}</small>
@@ -35,17 +36,25 @@
                         </div>
                     </div>
                     {% endfor %}
+                <div class="row">
+                    <div class="col-sm-9">&nbsp;</div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-outline-success btn-block" type="submit">Login</button>
+                    </div>
                 </div>
-                <button class="btn btn-outline-success" type="submit">Login</button>
 
             </form>
         </div>
     </div>
     <div class="card-footer">
-        <div class="card-text text-right text-primary">
-            <span>If forgot password:</span>
-            <a class="btn btn-primary ml-3" href="{% url 'password_reset' %}">Reset/Change</a>
-        </div>
+
+            <div class="row">
+                <div class="col-sm-8">
+                    <a class="btn btn-primary" href="{% url 'password_reset' %}">Reset/Change Password</a>
+                </div>
+                <div class="col-sm-4">&nbsp;</div>
+            </div>
+
     </div>
 </div>
 {% endblock %}
