@@ -5,8 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/spacelab/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-sZG5VVk41YqhJjYXgJFoRVd3d2AdDgy4oyIytQJMGx/Mizz1N+5bgKQBSCGfKQnP" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/flatly/bootstrap.min.css"
+          integrity="sha384-qF/QmIAj5ZaYFAeQcrQ6bfVMAh4zZlrGwTPY7T/M+iTTLJqJBJjwwnsE5Y0mV7QK"
+          crossorigin="anonymous">
 
     <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet"
           integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
@@ -39,13 +40,13 @@
 </head>
 <header class="fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <span class="navbar-brand">VariantAlert</span>
+        <span class="navbar-brand ">VariantAlert</span>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
                 aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse pl-5 ml-5" id="navbarColor01">
-            <ul class="navbar-nav ml-5">
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav mr-auto">
                 <li class="nav-item {% if request.path == '/' %} active {% endif %}">
                     <a href="{% url 'home' %}" class="nav-link" onclick="showModal();" >Home</a>
                 </li>
