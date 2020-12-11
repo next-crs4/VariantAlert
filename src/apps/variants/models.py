@@ -39,3 +39,4 @@ class QueryModel(models.Model):
     fields = ArrayField(models.CharField(max_length=50, blank=True), default=list, blank=True)
     date = models.DateTimeField(default=now, blank=True)
     update = models.DateTimeField(default=now, blank=True)
+    alert = models.BooleanField(default=False, blank=True)

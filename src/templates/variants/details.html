@@ -71,7 +71,11 @@
                         <a class="nav-link" data-toggle="tab" href="#old">Previous</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#diff">Difference</a>
+                        <a class="nav-link" data-toggle="tab" href="#diff">Difference
+                            {% if query.difference %}
+                                <span class="fas fa-check-circle fa-sm" aria-hidden="true"></span>
+                            {% endif %}
+                        </a>
                     </li>
                 </ul>
                 <div id="myTabContent" class="tab-content">
@@ -80,6 +84,7 @@
                         {% if query.result %}
                         <table class="table table-hover table-striped border-primary table-sm mb-5"
                                data-toggle="table"
+                               data-icons="icons"
                                data-buttons-align="left"
                                data-show-columns="true"
                                data-show-fullscreen="true"
@@ -190,6 +195,13 @@
             </div>
         </div>
 </div>
+<script>
+  window.icons = {
+    refresh: 'ion-md-refresh',
+    columns: 'fas fa-th-list',
+    fullscreen: 'fas fa-expand-arrows-alt'
+  }
+</script>
 {% else %}
 
 <div class="alert alert-dismissible alert-danger mt-4" style="width:100rem">

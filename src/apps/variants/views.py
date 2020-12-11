@@ -76,10 +76,7 @@ class History(LoginRequiredMixin, generic.base.TemplateView):
             queries = queries.order_by(_filter.get('sort_by'))
 
         if 'show' in _filter and 'alerts' in _filter.get('show'):
-            queries = queries.exclude(difference=list()).exclude(difference=json.dumps(list()))
-
-        if 'show' in _filter and 'alerts' in _filter.get('show'):
-            queries = queries.exclude(difference=list()).exclude(difference=json.dumps(list()))
+            queries = queries.filter(alert=True)
 
         return [Toolkit.ret_query(q) for q in queries]
 
@@ -106,6 +103,8 @@ class Details(LoginRequiredMixin, generic.base.TemplateView):
             query = models.QueryModel.objects.get(pk=query_id)
             if query.user_id != self.request.user.id:
                 return None
+            query.alert = False
+            query.save()
         except Exception as e:
             return None
         return Toolkit.ret_query(query)
@@ -136,8 +135,10 @@ class Rerun(LoginRequiredMixin, generic.base.TemplateView):
             query.result = v.get_variant(query.query, query.assembly, query.fields)
             query.difference = Toolkit.compare(query.previous, query.result)
             query.date = query.date
+            query.alert = False
             if query.difference:
                 query.update = now()
+                query.alert = True
             query.save()
             return Toolkit.ret_query(query)
         return query

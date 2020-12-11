@@ -8,13 +8,12 @@
 <div class='row mt-2 mx-auto'>
     <div class="center">
 
-        {% if queries %}
-        {% autopaginate queries 25 %}
+
 
         <div class="row">
             <table class="table table-hover table-striped table-sm mx-auto" style="width:70rem;"
                     data-toggle="table"
-
+                    data-icons="icons"
                     data-search-align="right"
                     data-search="true"
                     data-buttons-align="left"
@@ -45,6 +44,7 @@
                 </tr>
                 </thead>
                 <tbody>
+                {% autopaginate queries 25 %}
                 {% for query in queries %}
                 <tr class="text-left">
                     <td class="border-bottom border-primary" data-width="115">
@@ -82,10 +82,10 @@
                     <td class="border-bottom border-primary">{{ query.assembly }}</td>
                     <td class="border-bottom border-primary">{{ query.date }}</td>
                     <td class="border-bottom border-primary">{{ query.update }}</td>
-                    <td class="border-bottom border-primary text-center {% if query.difference  %}bg-primary {% endif %} my-auto">
+                    <td class="border-bottom border-primary text-center {% if query.alert  %}bg-primary {% endif %} my-auto">
                         <small>
-                        {% if query.difference %}
-                            <span class="fas fa-flag text-white" aria-hidden="true"></span>
+                        {% if query.alert %}
+                            <span class="fas fa-check-circle fa-2x text-success" aria-hidden="true"></span>
                         {% endif %}
                         </small>
                     </td>
@@ -155,18 +155,16 @@
                 </div>
             </fieldset>
         </form>
-
-            {% else %}
-            <div class="alert alert-dismissible alert-info" style="width:70rem">
-                <h1 class="alert-heading">Warning!</h1>
-                <p class="mb-0">
-                <h3> {% if request.GET and request.GET.show == "only_alerts" %}No alert is reported{% else %}You have
-                    not saved any queries for the moment{% endif %}</h3></p>
-            </div>
-            {% endif %}
-        <hr class="my-2">
+        <hr class="{% if queries %}my-2{%else%}my-4{%endif%}">
         </div>
 </div>
+<script>
+  window.icons = {
+    refresh: 'ion-md-refresh',
+    columns: 'fas fa-th-list',
+    fullscreen: 'fas fa-expand-arrows-alt'
+  }
+</script>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="spinnerModal">
     <div class="modal-dialog modal-dialog-centered text-center" role="document">

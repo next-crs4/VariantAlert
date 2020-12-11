@@ -76,6 +76,7 @@ class QueryCronJob(CronJobBase):
                 if q.difference:
                     self.logger.info('ALERT - Found change for query {} - {}'.format(q.label, q.query))
                     q.update = now()
+                    q.alert = True
                     q.save()
                     alerts.append(q)
                 else:
