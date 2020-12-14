@@ -17,5 +17,4 @@ class Update(generic.UpdateView):
     success_url = reverse_lazy('history')
     template_name = 'accounts/update.html'
 
-    # def get_queryset(self):
-    #     return User.objects.filter(pk=self.request.user.id)
+
