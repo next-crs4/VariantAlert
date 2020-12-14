@@ -6,9 +6,11 @@ services:
 script:
   - make start-local
   - docker exec dj01 python /code/src/manage.py check
+  - docker exec dj01 python /code/src/manage.py test --noinput apps
   - make stop
   - make clean
   - make start-prod
   - docker exec dj01 python /code/src/manage.py check
+  - docker exec dj01 python /code/src/manage.py test --noinput apps
   - make stop
   - make clean
