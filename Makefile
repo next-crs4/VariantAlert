@@ -89,5 +89,5 @@ stop:
 
 clean: stop
 	docker rmi variantalert_web:latest
-	docker rmi postgres:latest
+	docker rmi postgres:12-alpine
 	docker rmi nginx:latest
