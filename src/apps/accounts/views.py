@@ -2,7 +2,7 @@
 from . import forms
 from django.urls import reverse_lazy
 from django.views import generic
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 
 
@@ -11,7 +11,7 @@ class SignUp(generic.CreateView):
     success_url = reverse_lazy('login')
     template_name = 'accounts/signup.html'
 
-class Update(generic.UpdateView):
+class Update(LoginRequiredMixin, generic.UpdateView):
     form_class = forms.UpdateForm
     model = User
     success_url = reverse_lazy('history')
