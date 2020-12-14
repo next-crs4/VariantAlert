@@ -4,12 +4,18 @@
 {% block title %}Edit user{% endblock %}
 
 {% block content %}
+
+
+{% if request.user.id == user.id %}
+
 <div class="card border-primary mt-5 mb-5" style="width:30rem;">
     <div class="card-header bg-primary">
         <h4 class="text-white">Edit user</h4>
     </div>
-    <div class="card-body">
+    <div class="card-body {% if request.user.id != user.id %}bg-danger{%endif%}">
         <div class="card-text">
+
+
             <form method="post">
                 {% csrf_token %}
                 {% for field in form %}
@@ -38,8 +44,32 @@
                     </div>
                 </div>
             </form>
+
+
         </div>
-        </form>
     </div>
 </div>
+ {% else %}
+<div class="alert alert-dismissible alert-danger mt-5 mb-5" style="width:100rem">
+    <h1 class="alert-heading">404</h1>
+    <h2>OPS! Page not found!</h2>
+    <h3>The page you are looking for doesn't exist:
+        <a href="{% url 'home' %}">Come back home!</a>
+    </h3>
+</div>
+{% endif %}
+<div class="modal fade" tabindex="-1" role="dialog" id="spinnerModal">
+    <div class="modal-dialog modal-dialog-centered text-center" role="document">
+        <div class="modal-body">
+            <h1 class="text-white">Wait while loading...</h1>
+            <div class="spinner-border text-info"
+                 style="width: 5rem; height: 5rem;"
+                 role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <h3 class="text-white">It may take a long time</h3>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
