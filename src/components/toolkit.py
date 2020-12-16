@@ -101,6 +101,9 @@ class Handling(object):
             type = d.get('type')
             message = d.get('message')
             if type and message:
+                field = message
+                previous = ''
+                current = ''
                 if  '-' in message:
                     m = message.split('-')
                     field = m[0].strip()
@@ -121,14 +124,9 @@ class Handling(object):
                         current = values.strip()
                         previous = ''
 
-                if '-' not in message:
-                    field = message
-                    previous = ''
-                    current = ''
-
-            l.append(dict(field=field, type=type,
-                          current=current,
-                          previous=previous))
+                l.append(dict(field=field, type=type,
+                              current=current,
+                              previous=previous))
 
         return  Handling._filter(sorted(l, key=lambda k: k['field']))
 
