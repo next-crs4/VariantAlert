@@ -29,7 +29,7 @@ After login successfully, user is redirected to the query page.
 
 ![After Login](images/after_login.png)
 Please note the changes in menu bar:
-- An User menu to edit your profile (green button) and to log out (red button) 
+- A User menu to edit your profile (green button) and to log out (red button) 
 
 ![User Menu](images/user_menu.png)
 
