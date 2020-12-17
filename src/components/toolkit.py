@@ -32,14 +32,6 @@ class Toolkit(object):
             'chromosome']
         return query['chromosome'] + ':' + 'g.' + str(query['position']) + query['variant_reference'] + '>' + query[
             'variant_alternate']
-    # @staticmethod
-    # def dump(query):
-    #     #ofile = tempfile.NamedTemporaryFile()
-    #     ofile = "/tmp/prova.xlsx"
-    #     q = Toolkit.ret_query(query)
-    #     df = pd.DataFrame(q.result, index=[0])
-    #     df.to_excel(ofile, index=False, engine="xlsxwriter")
-    #     return ofile
 
     @staticmethod
     def compare(json1, json2):
@@ -48,12 +40,12 @@ class Toolkit(object):
         diff1 = jsoncompare.Diff(json1, json2, True).difference
         diff2 = jsoncompare.Diff(json2, json1, False).difference
         diffs = []
-        for type, message in diff1:
+        for _type, message in diff1:
             newType = 'CHANGED'
-            if type == PATH:
+            if _type == PATH:
                 newType = 'REMOVED'
             diffs.append({'type': newType, 'message': message.replace("'","")})
-        for type, message in diff2:
+        for _type, message in diff2:
             diffs.append({'type': 'ADDED', 'message': message.replace("'","")})
         return diffs
 
@@ -98,9 +90,9 @@ class Handling(object):
 
         l = list()
         for d in diffs:
-            type = d.get('type')
+            kind = d.get('type')
             message = d.get('message')
-            if type and message:
+            if kind and message:
                 field = message
                 previous = ''
                 current = ''
@@ -109,22 +101,22 @@ class Handling(object):
                     field = m[0].strip()
                     values = m[1].strip()
 
-                    if 'CHANGED' in type and '|' in values:
+                    if 'CHANGED' in kind and '|' in values:
                         v = values.split('|')
                         previous = v[0].strip()
                         current = v[1].strip() if len(v)>1 else ''
-                    if 'CHANGED' in type and '|' not in values and ',' in values:
+                    if 'CHANGED' in kind and '|' not in values and ',' in values:
                         v = values.split(',')
                         previous = v[0].strip()
                         current = v[1].strip() if len(v) > 1 else ''
-                    if 'ADDED' in type:
+                    if 'ADDED' in kind:
                         current = values.strip()
                         previous = ''
-                    if 'REMOVED' in type:
+                    if 'REMOVED' in kind:
                         current = values.strip()
                         previous = ''
 
-                l.append(dict(field=field, type=type,
+                l.append(dict(field=field, type=kind,
                               current=current,
                               previous=previous))
 

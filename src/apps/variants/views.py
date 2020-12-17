@@ -123,7 +123,7 @@ class Rerun(LoginRequiredMixin, generic.base.TemplateView):
             query = models.QueryModel.objects.get(pk=query_id)
             if query.user_id != self.request.user.id:
                 return None
-        except Excpetion as e:
+        except Exception as e:
             return None
         return query
 

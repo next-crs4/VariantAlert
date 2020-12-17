@@ -50,12 +50,14 @@ class Diff(object):
 
     # if object is list, loop over it and check.
     elif isinstance(first, list):
+      first = self.retrieve_list(first)
       for (index, item) in enumerate(first):
         new_path = '{}.{}'.format(path, index)
         # try to get the same index from second
         sec = None
         if second != None:
           try:
+            second = self.retrieve_list(second)
             sec = second[index]
           except Exception as e:
             # goes to difference
@@ -76,6 +78,12 @@ class Diff(object):
     if diff_message not in self.difference:
       self.seen.append(diff_message)
       self.difference.append((type_, diff_message))
+
+  def retrieve_list(self, _list):
+    for item in _list:
+      if isinstance(item, list) or isinstance(item, dict):
+        return _list
+    return sorted(_list)
 
 
 
