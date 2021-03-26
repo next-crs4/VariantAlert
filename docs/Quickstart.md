@@ -89,6 +89,6 @@ Remember to configure your EMAIL_HOST:
 For production environment, configure HOST
   make HOST=example.com [options] start-*
  
-Docs: https://github.com/next-crs4/VariantAlert/blob/master/README.md
+Docs: https://next-crs4.github.io/VariantAlert/ 
 
 ```

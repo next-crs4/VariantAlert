@@ -56,7 +56,7 @@ help:
 	@echo "For production environment, configure HOST"
 	@echo "  make HOST=example.com [options] start-*"
 	@echo " "
-	@echo "Docs: https://github.com/next-crs4/VariantAlert/blob/master/README.md"
+	@echo "Docs: https://next-crs4.github.io/VariantAlert"
 	@echo " "
 
 init:

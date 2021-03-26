@@ -24,7 +24,7 @@ See [docker-compose docs](https://docs.docker.com/compose/reference/overview/)
 **VariantAlert** documentation can be found in the `docs/` directory:
 
 1. [Quickstart]({{ 'Quickstart.html' | site_relative }})
-2. [User Manual](https://github.com/next-crs4/VariantAlert/blob/master/docs/UserManual.md)
+2. [User Manual]({{ 'UserManual.html' | site_relative }})
 
 ## How to cite VariantAlert
 To reference VariantAlert in your work, please cite the "http://variant-alert.crs4.it" URL.

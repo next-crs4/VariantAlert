@@ -5,41 +5,41 @@ The **VariantAlert** landing page shows a short description
 of the tool and a minimized menu bar, 
 with options only for unregistered users.
 
-![Home Page](images/home.png)
+![Home Page]({{ 'assets/images/home.png' | site_relative }})
 
 To access the full functionality of VariantAlert, 
 users must sign up and then log in.
 
 ## SignUp
 
-![SignUp btn](images/signup_btn.png)
+![SignUp btn]({{ 'assets/images/signup_btn.png' | site_relative }})
 
 The SignUp button will open the SignUp form
 
-![SignUp](images/signup.png)
+![SignUp]({{ 'assets/images/signup.png' | site_relative }})
 
 ## Login
 
-![Login btn](images/login_btn.png)
+![Login btn]({{ 'assets/images/login_btn.png' | site_relative }})
 
 By clicking on the Login button, the Login form will be displayed
 
-![Login](images/login.png)
+![Login]({{ 'assets/images/login.png' | site_relative }})
 
 ## After Login
 After login successfully, user is redirected to the query page.
 
-![After Login](images/after_login.png)
+![After Login]({{ 'assets/images/after_login.png' | site_relative }})
 
 Please note the changes in menu bar:
 
 - A User menu to edit your profile (green button) and to log out (red button) 
 
-![User Menu](images/user_menu.png)
+![User Menu]({{ 'assets/images/user_menu.png' | site_relative }})
 
 -  A new dropdown item in menu bar: **Variants**
 
-![Variant Menu](images/variants_menu.png)
+![Variant Menu]({{ 'assets/images/variants_menu.png' | site_relative }})
 
 ## Add New
 This is the page where users are automatically redirected after login.
@@ -61,24 +61,24 @@ to uniquely identify the variants:
 
 ### Single Mode
 
-![Single Mode](images/add_new_single.png)
+![Single Mode]({{ 'assets/images/add_new_single.png' | site_relative }})
 
 After successfully submitting the variant, the user will be redirected to
 the **Details** page with the results of the query.
 
 ### Multiple Mode
 
-![Multple Mode](images/add_new_multiple.png)
+![Multple Mode]({{ 'assets/images/add_new_multiple.png' | site_relative }})
 
 In this case, the label will be the same for all the variants.
-An example csv file is available in the `files` folder.
+An example csv file is available [here]({{ 'assets/files/ex_multiple_mode.csv' | site_relative }}).
 After successfully submitting, the user will be redirected to the **History** 
 page with the list of the submitted variants.
 
 ## Show all
 The page shows a table listing all the variants submitted by the user.
 
-![Show all](images/show_all.png)
+![Show all]({{ 'assets/images/show_all.png' | site_relative }})
 
 For each variant the query parameters, 
 the creation date and the date of the last change are shown. 
@@ -86,7 +86,7 @@ If a change in annotation was detected since the last login,
 the variant is marked with an alert tick. In addition, 
 each variant features 3 action buttons:
 
-![Actions](images/show_all_actions.png)
+![Actions]({{ 'assets/images/show_all_actions.png' | site_relative }})
 
 - Green: show query results (**Detail** page)
 - Red: delete the variant
@@ -94,22 +94,22 @@ each variant features 3 action buttons:
 
 A form below the table allows the user to filter and sort the list of queries.
 
-![Filters](images/show_all_filters.png)
+![Filters]({{ 'assets/images/show_all_filters.png' | site_relative }})
 
 ## Alerts
 Display only variants with an updated annotation since the last login.
 
-![Only Alerts](images/only_alerts.png)
+![Only Alerts]({{ 'assets/images/only_alerts.png' | site_relative }})
 
 ## Details
 This page shows variant details and results of the query.
 
-![Details 1](images/details_1.png)
+![Details 1]({{ 'assets/images/details_1.png' | site_relative }})
 
-![Details 2](images/details_2.png)
+![Details 2]({{ 'assets/images/details_2.png' | site_relative }})
 
 
 ## Download
 Users can download query results as `*.xlsx` file 
 
-![Download](images/download.png)
+![Download]({{ 'assets/images/download.png' | site_relative }})
