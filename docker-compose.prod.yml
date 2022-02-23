@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    image: library/postgres:12-alpine
+    image: postgres:13
     container_name: db01
     environment:
       POSTGRES_USER: postgres
@@ -13,6 +13,8 @@ services:
       - ~/variant-alert/postgres-data:/var/lib/postgresql/data
     ports:
      - "5432:5432"
+    networks:
+      - hutch
 
   web:
     build: .
@@ -23,6 +25,8 @@ services:
       - .:/code
     expose:
       - "8000"
+    networks:
+      - hutch
     depends_on:
       - db
 
@@ -38,5 +42,11 @@ services:
       - ./src/static:/static
     depends_on:
       - web
+    networks:
+      - hutch
 
-
+networks:
+  hutch:
+    ipam:
+      config:
+        - subnet: 172.27.0.0/16

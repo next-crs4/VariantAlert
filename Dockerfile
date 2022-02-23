@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.8
 
 ARG USER_ID
 ARG GROUP_ID
@@ -11,15 +11,18 @@ COPY . /code/
 RUN mkdir /config
 ADD /config/requirements.pip /config/
 
+RUN apt -qq update && \
+    apt install --no-install-recommends -y apt-utils rsync
 
-RUN apt-get -qq update && \
-    apt-get install --no-install-recommends -y apt-utils rsync && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+RUN apt autoremove -y && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN /usr/local/bin/python -m pip install --upgrade pip && \
     pip install -r /config/requirements.pip && \
-    rm -rf ~/.cache/ && \
-    groupadd -g ${GROUP_ID} appuser && \
+    rm -rf ~/.cache/
+
+RUN groupadd -g ${GROUP_ID} appuser && \
     useradd -m -u ${USER_ID} -g appuser appuser
 
 USER appuser

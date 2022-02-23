@@ -36,23 +36,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.variants',
     'variant_alert',
+    'apps.variants',
     'prettyjson',
     'django_cron',
-    'pagination_bootstrap',
+    'django_pagination_bootstrap',
     'mathfilters',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'pagination_bootstrap.middleware.PaginationMiddleware',
+    'django_pagination_bootstrap.middleware.PaginationMiddleware',
 ]
 
 CRON_CLASSES = ["variant_alert.cron.QueryCronJob",]

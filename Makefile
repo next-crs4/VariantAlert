@@ -76,7 +76,9 @@ init-prod: init
 
 start-local: init-local
 	docker-compose -f docker-compose.local.yml build --build-arg USER_ID=${USERID} --build-arg GROUP_ID=${GROUPID}
-	docker-compose -f docker-compose.local.yml up -d
+	docker-compose -f docker-compose.local.yml up -d db
+	docker-compose -f docker-compose.local.yml up -d nginx
+	docker-compose -f docker-compose.local.yml up  web
 	@echo "Point your browser to: http://${HOST}:8000"
 
 start-prod: init-prod

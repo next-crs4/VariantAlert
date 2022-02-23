@@ -13,6 +13,10 @@ services:
       - ~/variant-alert/postgres-data:/var/lib/postgresql/data
     ports:
      - "5432:5432"
+    networks:
+      - hutch
+
+
   web:
     build: .
     container_name: dj01
@@ -24,6 +28,8 @@ services:
       - "8000"
     depends_on:
       - db
+    networks:
+      - hutch
 
 
   nginx:
@@ -36,5 +42,11 @@ services:
       - ./src/static:/static
     depends_on:
       - web
+    networks:
+      - hutch
 
-
+networks:
+  hutch:
+    ipam:
+      config:
+        - subnet: 172.27.0.0/16
