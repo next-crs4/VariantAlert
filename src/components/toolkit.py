@@ -22,6 +22,7 @@ class Toolkit(object):
 
     @staticmethod
     def build_query(query):
+        strq = ''
         if not isinstance(query, dict):
             query = dict(chromosome=query.chromosome,
                          position=query.position,
@@ -30,8 +31,14 @@ class Toolkit(object):
 
         query['chromosome'] = 'chr' + str(query['chromosome']) if query['chromosome'].isnumeric() else query[
             'chromosome']
-        return query['chromosome'] + ':' + 'g.' + str(query['position']) + query['variant_reference'] + '>' + query[
-            'variant_alternate']
+
+        strq = "{}:g.{}{}>{}".format(
+            query['chromosome'],
+            str(query['position']),
+            str(query['variant_reference']),
+            str(query['variant_alternate'])
+            )
+        return strq
 
     @staticmethod
     def compare(json1, json2):

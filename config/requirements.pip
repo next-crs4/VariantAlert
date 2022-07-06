@@ -8,3 +8,4 @@ gunicorn
 django-mathfilters
 openpyxl==2.6.0
 whitenoise
+PyVCF3

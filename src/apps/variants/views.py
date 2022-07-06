@@ -13,7 +13,7 @@ import json
 
 from components.variants import Variants
 from components.toolkit import Toolkit
-from components.readers import CSVReader
+from components.readers import CSVReader, VCFReader
 from components.writers import xlsxWriter
 
 
@@ -33,8 +33,10 @@ class Query(LoginRequiredMixin, generic.CreateView):
         query = form.save(commit=False)
         query.fields = sources
         csv_file = form.cleaned_data['csv_file']
+        vcf_file = form.cleaned_data['vcf_file']
+        vcf_assembly = form.cleaned_data['vcf_assembly']
 
-        if not csv_file:
+        if not csv_file and not vcf_file:
             query.query = Toolkit.build_query(query)
             query.result = v.get_variant(query=query.query,
                                          assembly=query.assembly,
@@ -43,12 +45,12 @@ class Query(LoginRequiredMixin, generic.CreateView):
             query.save()
             return HttpResponseRedirect(reverse_lazy('details', args=[query.id]))
         
-        else:
+        elif csv_file:
             queries = CSVReader(csv_file)
             for row in queries.get_content():
                 models.QueryModel.objects.create(
                     label=form.cleaned_data['csv_label'],
-                    chromosome='chr'+row.get('chromosome'),
+                    chromosome=row.get('chromosome'),
                     position=row.get('position'),
                     assembly=row.get('assembly'),
                     variant_ref=row.get('variant_reference'),
@@ -60,6 +62,31 @@ class Query(LoginRequiredMixin, generic.CreateView):
                                          fields=query.fields),
                     user_id=self.request.user.id,
                     )
+            return HttpResponseRedirect(reverse_lazy('history'))
+
+        elif vcf_file:
+            queries = VCFReader(vcf_file)
+            for row in queries.get_content():
+                row['assembly'] = vcf_assembly
+                alts = row.get('variant_alternate')
+                for alt in alts:
+                    if alt:
+                        row['variant_alternate'] = alt
+                        models.QueryModel.objects.create(
+                            label=form.cleaned_data['vcf_label'],
+                            chromosome=row.get('chromosome'),
+                            position=row.get('position'),
+                            assembly=row.get('assembly'),
+                            variant_ref=row.get('variant_reference'),
+                            variant_alt=row.get('variant_alternate'),
+                            query=Toolkit.build_query(row),
+                            fields=query.fields,
+                            result=v.get_variant(query=Toolkit.build_query(row),
+                                                 assembly=row.get('assembly'),
+                                                 fields=query.fields),
+                            user_id=self.request.user.id,
+                        )
+
             return HttpResponseRedirect(reverse_lazy('history'))
 
 

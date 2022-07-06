@@ -10,19 +10,26 @@
         <fieldset>
             <ul class="nav nav-tabs bg-default border-bottom border-info mt-3">
                 <li class="nav-item border-info">
-                    <a class="nav-link {% if not form.csv_label.errors and not form.csv_file.errors %}active{% endif %}" data-toggle="tab" href="#single">Single</a>
+                    <a class="nav-link {% if not form.csv_label.errors and not form.csv_file.errors and not form.vcf_label.errors and not form.vcf_file.errors %}active{% endif %}" data-toggle="tab" href="#single">Single</a>
                 </li>
                 <li class="nav-item border-info">
                     <a class="nav-link {% if form.csv_label.errors or form.csv_file.errors %}active{% endif %}"
-                       data-toggle="tab" href="#multiples">Multiple</a>
+                       data-toggle="tab" href="#multiples_from_csv">Multiple (from CSV file)</a>
+                </li>
+                <li class="nav-item border-info">
+                    <a class="nav-link {% if form.vcf_label.errors or form.vcf_file.errors %}active{% endif %}"
+                       data-toggle="tab" href="#multiples_from_vcf">Multiple (from VCF file)</a>
                 </li>
             </ul>
             <div id="myTabContent" class="tab-content">
-                <div class="tab-pane fade {% if not form.csv_label.errors and not form.csv_file.errors %}show active{% endif %}" id="single">
+                <div class="tab-pane fade {% if not form.csv_label.errors and not form.csv_file.errors and not form.vcf_label.errors and not form.vcf_file.errors %}show active{% endif %}" id="single">
                     {% include "variants/query.single.html" %}
                 </div>
-                <div class="tab-pane fade {% if form.csv_label.errors or form.csv_file.errors %}show active{% endif %}" id="multiples">
-                    {% include "variants/query.multiples.html" %}
+                <div class="tab-pane fade {% if form.csv_label.errors or form.csv_file.errors %}show active{% endif %}" id="multiples_from_csv">
+                    {% include "variants/query.multiples.from_csv.html" %}
+                </div>
+                <div class="tab-pane fade {% if form.vcf_label.errors or form.vcf_file.errors %}show active{% endif %}" id="multiples_from_vcf">
+                    {% include "variants/query.multiples.from_vcf.html" %}
                 </div>
             </div>
             <div class="row col-sm-12">
