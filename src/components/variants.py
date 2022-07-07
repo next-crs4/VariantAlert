@@ -1,5 +1,5 @@
 import myvariant
-import json
+
 
 class Variants(object):
     def __init__(self):
@@ -22,10 +22,5 @@ class Variants(object):
         sources = self.get_sources()
         fields = self.get_fields()
         for s in sources:
-            d[s] = [f for f in fields if f.startswith(s+'.')]
+            d[s] = [f for f in fields if f.startswith(s + '.')]
         return d
-
-
-
-
-

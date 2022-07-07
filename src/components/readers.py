@@ -40,7 +40,6 @@ class VCFReader(vcf.Reader):
                      ) for r in self.content]
 
 
-
 class CSVReader(csv.DictReader):
     def __init__(self, f):
 

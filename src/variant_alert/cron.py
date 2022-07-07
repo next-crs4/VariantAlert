@@ -22,7 +22,7 @@ class QueryCronJob(CronJobBase):
     def __alert(self, u, queries):
         self.logger.info('Preparing mail for user: {} - {}'.format(u.get('username'), u.get('email')))
         msgs = "\n"
-        base_url = os.path.join('http://'+settings.HOST, 'variants', 'query')
+        base_url = os.path.join('http://' + settings.HOST, 'variants', 'query')
         for q in queries:
             url = os.path.join(base_url, str(q.id))
             msgs = msgs + "\t" + q.label + " - " + q.query + " (Go to {} for details)\n".format(url)

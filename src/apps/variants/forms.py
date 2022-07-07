@@ -6,7 +6,6 @@ from components.readers import CSVReader, VCFReader
 
 
 class QueryForm(forms.ModelForm):
-
     csv_file = forms.FileField(label="Upload a csv file with your queries:",
                                required=False,
                                help_text='CSV file with 5 columns: chromosome, position, variant_reference, '
@@ -81,7 +80,7 @@ class QueryForm(forms.ModelForm):
         vcf_assembly = self.cleaned_data.get('vcf_assembly')
         label = self.cleaned_data.get('label')
         position = self.cleaned_data.get('position')
-        sources =self.cleaned_data.get('sources')
+        sources = self.cleaned_data.get('sources')
 
         if csv_file and not csv_label:
             msg = forms.ValidationError("This field is required.")
