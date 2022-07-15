@@ -1,8 +1,11 @@
 import django.forms as forms
-from prettyjson import PrettyJSONWidget
+import os
 from . import models
 
 from components.readers import CSVReader, VCFReader
+
+MAX_LEN = int(os.environ.get('BATCH_SIZE'))
+SIZE_ALERT = "Up to a maximum of {} rows are allowed!".format(MAX_LEN) if MAX_LEN > 0 else ""
 
 
 class QueryForm(forms.ModelForm):
@@ -18,7 +21,7 @@ class QueryForm(forms.ModelForm):
                                          '1,69869,T,A,hg19</br>'
                                          '1,881918,G,A,hg19</br>'
                                          '...</br>'
-                                         'Up to a maximum of 25 rows are allowed!',
+                                         '{}'.format(SIZE_ALERT),
                                )
 
     csv_label = forms.CharField(max_length=50, required=False,
@@ -27,7 +30,9 @@ class QueryForm(forms.ModelForm):
 
     vcf_file = forms.FileField(label="Upload a vcf file with your queries:",
                                required=False,
-                               help_text='VCF file',
+                               help_text='VCF file '
+                                         '</br>'
+                                         '{}'.format(SIZE_ALERT),
                                )
 
     vcf_label = forms.CharField(max_length=50, required=False,

@@ -4,6 +4,7 @@ DEFAULT_EMAIL_USER=your@yourserver.com
 DEFAULT_EMAIL_PASSWORD=your-email-account-password
 DEFAULT_EMAIL_PORT=587
 DEFAULT_HOST=0.0.0.0
+DEFAULT_BATCH_SIZE=25
 
 UNAME_S := $(shell uname -s)
 USERID=$(shell id -u)
@@ -33,30 +34,42 @@ endif
 ifndef EMAIL_PORT
 override EMAIL_PORT = ${DEFAULT_EMAIL_PORT}
 endif
+ifndef BATCH_SIZE
+override BATCH_SIZE = ${DEFAULT_BATCH_SIZE}
+endif
 
 help:
-	@echo "VariantAlert - a tool to notify updates in genetic variant annotations"
-	@echo "https://github.com/next-crs4/VariantAlert"
+	@echo " VariantAlert - a tool to notify updates in genetic variant annotations"
+	@echo " https://github.com/next-crs4/VariantAlert"
 	@echo " "
-	@echo "Please use \`make [optiosn] <target>\` where <target> is one of"
-	@echo "  start-local             bring up the variant-alert app in your local/develop environment (0.0.0.0)"
-	@echo "  start-prod              bring up the variant-alert app in production environment (with ssl)"
-	@echo "  stop                    bring down the variant-alert app"
-	@echo "  clean                   remove the variant-alert app from your computer"
-	@echo "  "
-	@echo "variant-alert will be deployed into ${DEFAULT_VARIANT_ALERT_ROOT}"
-	@echo "To set a different path, digit: "
-	@echo "  make VARIANT_ALERT_ROOT=/your/path [options] start-*"
-	@echo "  "
-	@echo "Remember to configure your EMAIL_HOST: "
-	@echo "  make \t EMAIL_HOST=${DEFAULT_EMAIL_HOST} \\"
-	@echo "\t EMAIL_USER=${DEFAULT_EMAIL_USER} \\"
-	@echo "\t EMAIL_PASSWORD=${DEFAULT_EMAIL_PASSWORD} [options] start-*"
-	@echo "  "
-	@echo "For production environment, configure HOST"
-	@echo "  make HOST=example.com [options] start-*"
+	@echo " Please use \`make [options] <target>\` where <target> is one of"
+	@echo "     start-local             bring up the variant-alert app in your local/develop environment (0.0.0.0)"
+	@echo "     start-prod              bring up the variant-alert app in production environment (with ssl)"
+	@echo "     stop                    bring down the variant-alert app"
+	@echo "     clean                   remove the variant-alert app from your computer"
 	@echo " "
-	@echo "Docs: https://next-crs4.github.io/VariantAlert"
+	@echo " options:"
+	@echo "     VARIANT_ALERT_ROOT      deployment path (default: ${DEFAULT_VARIANT_ALERT_ROOT})"
+	@echo "     EMAIL_HOST              email host server (default: ${DEFAULT_EMAIL_HOST})"
+	@echo "     EMAIL_USER              email username (default: ${DEFAULT_EMAIL_USER})"
+	@echo "     EMAIL_PASSWORD          email password (default: ${DEFAULT_EMAIL_PASSWORD})"
+	@echo "     HOST                    variant alert host (default: ${DEFAULT_HOST})"
+	@echo "     BATCH_SIZE              number of variants for batch (default: ${DEFAULT_BATCH_SIZE})"
+	@echo "                             set zero to have no limitations"
+	@echo " "
+	@echo " variant-alert will be deployed into ${DEFAULT_VARIANT_ALERT_ROOT}"
+	@echo " To set a different path, digit: "
+	@echo "     make VARIANT_ALERT_ROOT=/your/path [options] start-*"
+	@echo "  "
+	@echo " Remember to configure your EMAIL_HOST: "
+	@echo "     make EMAIL_HOST=${DEFAULT_EMAIL_HOST} \\"
+	@echo "          EMAIL_USER=${DEFAULT_EMAIL_USER} \\"
+	@echo "          EMAIL_PASSWORD=${DEFAULT_EMAIL_PASSWORD} [options] start-*"
+	@echo "  "
+	@echo " For production environment, configure HOST"
+	@echo "     make HOST=example.com [options] start-*"
+	@echo " "
+	@echo " Docs: https://next-crs4.github.io/VariantAlert"
 	@echo " "
 
 init:
@@ -75,14 +88,20 @@ init-prod: init
 	sed -i -e 's|${DEFAULT_HOST}|${HOST}|g;' src/variant_alert/settings.py
 
 start-local: init-local
-	docker-compose -f docker-compose.local.yml build --build-arg USER_ID=${USERID} --build-arg GROUP_ID=${GROUPID}
+	docker-compose -f docker-compose.local.yml build \
+	--build-arg USER_ID=${USERID} \
+	--build-arg GROUP_ID=${GROUPID} \
+	--build-arg BATCH_SIZE=${BATCH_SIZE}
 	docker-compose -f docker-compose.local.yml up -d db
 	docker-compose -f docker-compose.local.yml up -d nginx
 	docker-compose -f docker-compose.local.yml up -d web
 	@echo "Point your browser to: http://${HOST}:8000"
 
 start-prod: init-prod
-	docker-compose -f docker-compose.prod.yml build --build-arg USER_ID=${USERID} --build-arg GROUP_ID=${GROUPID}
+	docker-compose -f docker-compose.prod.yml build \
+	--build-arg USER_ID=${USERID} \
+	--build-arg GROUP_ID=${GROUPID} \
+	--build-arg BATCH_SIZE=${BATCH_SIZE}
 	docker-compose -f docker-compose.prod.yml up -d
 	@echo "Point your browser to: https://${HOST}"
 
