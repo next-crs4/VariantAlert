@@ -1,13 +1,16 @@
+import math
+
 TYPE = 'TYPE'
 PATH = 'PATH'
 VALUE = 'VALUE'
 
+MAGNITUDE = -4
+THRESHOLD = 1
 
 class Diff(object):
     def __init__(self, first, second, with_values=False):
         self.difference = []
         self.seen = []
-        not_with_values = not with_values
         self.check(first, second, with_values=with_values)
 
     def check(self, first, second, path='', with_values=False):
@@ -55,7 +58,7 @@ class Diff(object):
                         sec = second[index]
                     except Exception as e:
                         # goes to difference
-                        self.save_diff('{} - {}'.format(new_path, type(item).__name__), TYPE)
+                        self.save_diff('{} # {}'.format(new_path, type(item).__name__), TYPE)
 
                 # recursive call
                 self.check(first[index], sec, path=new_path, with_values=with_values)
@@ -63,8 +66,8 @@ class Diff(object):
         # not list, not dict. check for equality (only if with_values is True) and return.
         else:
             if with_values and second is not None:
-                if first != second:
-                    self.save_diff('{} - {} | {}'.format(path, first, second), VALUE)
+                if self.is_changed(first, second):
+                    self.save_diff('{} # {} | {}'.format(path, first, second), VALUE)
             return
 
     def save_diff(self, diff_message, type_):
@@ -77,3 +80,27 @@ class Diff(object):
             if isinstance(item, list) or isinstance(item, dict):
                 return _list
         return sorted(_list)
+
+    def is_changed(self, first, second):
+        try:
+            first = float(first)
+            second = float(second)
+            if first == second:
+                return False
+
+        except Exception as e:
+            return first != second
+
+        lg_first = round(math.log(first, 10))
+        lg_second = round(math.log(second, 10))
+
+        if lg_first < MAGNITUDE and lg_second < MAGNITUDE:
+            check = round(abs(math.log(first/second, 10)))
+            return True if check >= THRESHOLD else False
+
+        if lg_first == lg_second:
+            check = round(math.log(abs(first-second), 10))
+            return True if check > MAGNITUDE else False
+
+        return first != second
+

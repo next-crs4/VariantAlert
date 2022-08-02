@@ -4,9 +4,9 @@ import json
 from collections import OrderedDict
 from itertools import chain, starmap
 
-TYPE = 'TYPE'
-PATH = 'PATH'
-VALUE = 'VALUE'
+# TYPE = 'TYPE'
+# PATH = 'PATH'
+# VALUE = 'VALUE'
 
 
 class Toolkit(object):
@@ -49,7 +49,7 @@ class Toolkit(object):
         diffs = []
         for _type, message in diff1:
             new_type = 'CHANGED'
-            if _type == PATH:
+            if _type == jsoncompare.PATH:
                 new_type = 'REMOVED'
             diffs.append({'type': new_type, 'message': message.replace("'", "")})
         for _type, message in diff2:
@@ -104,8 +104,8 @@ class Handling(object):
                 field = message
                 previous = ''
                 current = ''
-                if '-' in message:
-                    m = message.split('-')
+                if '#' in message:
+                    m = message.split('#')
                     field = m[0].strip()
                     values = m[1].strip()
 
