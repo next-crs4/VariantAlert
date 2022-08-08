@@ -1,13 +1,13 @@
 from . import jsoncompare
 
-import tempfile
 import json
 from collections import OrderedDict
 from itertools import chain, starmap
 
-TYPE = 'TYPE'
-PATH = 'PATH'
-VALUE = 'VALUE'
+# TYPE = 'TYPE'
+# PATH = 'PATH'
+# VALUE = 'VALUE'
+
 
 class Toolkit(object):
 
@@ -22,6 +22,7 @@ class Toolkit(object):
 
     @staticmethod
     def build_query(query):
+        strq = ''
         if not isinstance(query, dict):
             query = dict(chromosome=query.chromosome,
                          position=query.position,
@@ -30,8 +31,14 @@ class Toolkit(object):
 
         query['chromosome'] = 'chr' + str(query['chromosome']) if query['chromosome'].isnumeric() else query[
             'chromosome']
-        return query['chromosome'] + ':' + 'g.' + str(query['position']) + query['variant_reference'] + '>' + query[
-            'variant_alternate']
+
+        strq = "{}:g.{}{}>{}".format(
+            query['chromosome'],
+            str(query['position']),
+            str(query['variant_reference']),
+            str(query['variant_alternate'])
+        )
+        return strq
 
     @staticmethod
     def compare(json1, json2):
@@ -41,12 +48,12 @@ class Toolkit(object):
         diff2 = jsoncompare.Diff(json2, json1, False).difference
         diffs = []
         for _type, message in diff1:
-            newType = 'CHANGED'
-            if _type == PATH:
-                newType = 'REMOVED'
-            diffs.append({'type': newType, 'message': message.replace("'","")})
+            new_type = 'CHANGED'
+            if _type == jsoncompare.PATH:
+                new_type = 'REMOVED'
+            diffs.append({'type': new_type, 'message': message.replace("'", "")})
         for _type, message in diff2:
-            diffs.append({'type': 'ADDED', 'message': message.replace("'","")})
+            diffs.append({'type': 'ADDED', 'message': message.replace("'", "")})
         return diffs
 
 
@@ -61,6 +68,7 @@ class Handling(object):
             # Unpack one level only!!!
 
             if isinstance(parent_value, dict):
+
                 for key, value in parent_value.items():
                     temp1 = parent_key + '.' + key
                     yield temp1, value
@@ -96,15 +104,15 @@ class Handling(object):
                 field = message
                 previous = ''
                 current = ''
-                if  '-' in message:
-                    m = message.split('-')
+                if '#' in message:
+                    m = message.split('#')
                     field = m[0].strip()
                     values = m[1].strip()
 
                     if 'CHANGED' in kind and '|' in values:
                         v = values.split('|')
                         previous = v[0].strip()
-                        current = v[1].strip() if len(v)>1 else ''
+                        current = v[1].strip() if len(v) > 1 else ''
                     if 'CHANGED' in kind and '|' not in values and ',' in values:
                         v = values.split(',')
                         previous = v[0].strip()
@@ -120,7 +128,7 @@ class Handling(object):
                               current=current,
                               previous=previous))
 
-        return  Handling._filter(sorted(l, key=lambda k: k['field']))
+        return Handling._filter(sorted(l, key=lambda k: k['field']))
 
     @staticmethod
     def _filter(diffs):
@@ -130,8 +138,8 @@ class Handling(object):
             passed = True
 
             d = diffs[i]
-            p = diffs[i-1] if i > 0 else None
-            n = diffs[i+1] if i < len(diffs)-1 else None
+            p = diffs[i - 1] if i > 0 else None
+            n = diffs[i + 1] if i < len(diffs) - 1 else None
 
             if d.get('current') in _types or d.get('previous') in _types:
                 passed = False
@@ -149,8 +157,3 @@ class Handling(object):
                 l.append(d)
 
         return l
-
-
-
-
-

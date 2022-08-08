@@ -2,18 +2,16 @@
 from . import forms
 from django.urls import reverse_lazy
 from django.views import generic
-from django.views import View
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.timezone import now
 
 from . import models
-import json
 
 from components.variants import Variants
 from components.toolkit import Toolkit
-from components.readers import CSVReader
+from components.readers import CSVReader, VCFReader
 from components.writers import xlsxWriter
 
 
@@ -33,8 +31,10 @@ class Query(LoginRequiredMixin, generic.CreateView):
         query = form.save(commit=False)
         query.fields = sources
         csv_file = form.cleaned_data['csv_file']
+        vcf_file = form.cleaned_data['vcf_file']
+        vcf_assembly = form.cleaned_data['vcf_assembly']
 
-        if not csv_file:
+        if not csv_file and not vcf_file:
             query.query = Toolkit.build_query(query)
             query.result = v.get_variant(query=query.query,
                                          assembly=query.assembly,
@@ -42,13 +42,13 @@ class Query(LoginRequiredMixin, generic.CreateView):
             query.user_id = self.request.user.id
             query.save()
             return HttpResponseRedirect(reverse_lazy('details', args=[query.id]))
-        
-        else:
+
+        elif csv_file:
             queries = CSVReader(csv_file)
             for row in queries.get_content():
                 models.QueryModel.objects.create(
                     label=form.cleaned_data['csv_label'],
-                    chromosome='chr'+row.get('chromosome'),
+                    chromosome=row.get('chromosome'),
                     position=row.get('position'),
                     assembly=row.get('assembly'),
                     variant_ref=row.get('variant_reference'),
@@ -59,14 +59,38 @@ class Query(LoginRequiredMixin, generic.CreateView):
                                          assembly=row.get('assembly'),
                                          fields=query.fields),
                     user_id=self.request.user.id,
-                    )
+                )
+            return HttpResponseRedirect(reverse_lazy('history'))
+
+        elif vcf_file:
+            queries = VCFReader(vcf_file)
+            for row in queries.get_content():
+                row['assembly'] = vcf_assembly
+                alts = row.get('variant_alternate')
+                for alt in alts:
+                    if alt:
+                        row['variant_alternate'] = alt
+                        models.QueryModel.objects.create(
+                            label=form.cleaned_data['vcf_label'],
+                            chromosome=row.get('chromosome'),
+                            position=row.get('position'),
+                            assembly=row.get('assembly'),
+                            variant_ref=row.get('variant_reference'),
+                            variant_alt=row.get('variant_alternate'),
+                            query=Toolkit.build_query(row),
+                            fields=query.fields,
+                            result=v.get_variant(query=Toolkit.build_query(row),
+                                                 assembly=row.get('assembly'),
+                                                 fields=query.fields),
+                            user_id=self.request.user.id,
+                        )
+
             return HttpResponseRedirect(reverse_lazy('history'))
 
 
 class History(LoginRequiredMixin, generic.base.TemplateView):
-
     template_name = 'variants/history.html'
-     
+
     def get_queries(self, user_id, _filter=None):
         queries = models.QueryModel.objects.filter(user_id=user_id)
         if 'search_for' in _filter and _filter.get('search_for'):
@@ -89,7 +113,7 @@ class History(LoginRequiredMixin, generic.base.TemplateView):
         context['num_total'] = len(queries)
         context['filtering'] = self.request.GET
         return context
-    
+
     def post(self, request, *args, **kwargs):
         context = self.get_context_data()
         return super(History, self).render_to_response(context)
@@ -97,7 +121,7 @@ class History(LoginRequiredMixin, generic.base.TemplateView):
 
 class Details(LoginRequiredMixin, generic.base.TemplateView):
     template_name = 'variants/details.html'
-    
+
     def get_query(self, query_id):
         try:
             query = models.QueryModel.objects.get(pk=query_id)
@@ -117,7 +141,7 @@ class Details(LoginRequiredMixin, generic.base.TemplateView):
 
 class Rerun(LoginRequiredMixin, generic.base.TemplateView):
     template_name = 'variants/rerun.html'
-    
+
     def get_query(self, query_id):
         try:
             query = models.QueryModel.objects.get(pk=query_id)
@@ -171,7 +195,7 @@ class Delete(LoginRequiredMixin, generic.base.TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Delete, self).get_context_data(**kwargs)
         context['deleted'] = self.delete(context.get('query_id'))
-        return  context
+        return context
 
 
 class Download(LoginRequiredMixin, generic.base.View):
@@ -192,7 +216,7 @@ class Download(LoginRequiredMixin, generic.base.View):
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         )
         response['Content-Disposition'] = 'attachment; filename={date}-{label}.xlsx'.format(
-            date=now().strftime('%Y-%m-%d'),label=query.label
+            date=now().strftime('%Y-%m-%d'), label=query.label
         )
 
         workbook = xlsxWriter(query)

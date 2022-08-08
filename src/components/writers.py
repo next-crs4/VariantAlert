@@ -6,6 +6,7 @@ COLUMNS = dict(current=['Field', 'Value'],
 
 TITLES = ['current', 'previous', 'difference']
 
+
 class xlsxWriter(Workbook):
     def __init__(self, query):
         self.workbook = Workbook()
@@ -20,12 +21,14 @@ class xlsxWriter(Workbook):
     def save(self, output):
         self.workbook.save(output)
 
-
     def do_worksheet(self, title):
 
-        if 'current' in title and not self.current: return
-        if 'previous' in title and not self.previous: return
-        if 'difference' in title and not self.difference: return
+        if 'current' in title and not self.current:
+            return
+        if 'previous' in title and not self.previous:
+            return
+        if 'difference' in title and not self.difference:
+            return
 
         worksheet = self.workbook.active if 'current' in title else self.workbook.create_sheet(title)
         worksheet.title = title.capitalize()
@@ -45,7 +48,7 @@ class xlsxWriter(Workbook):
 
         else:
             data = self.current if 'current' in title else self.previous
-            rows = [[field, value]  for field,value in data.items()]
+            rows = [[field, value] for field, value in data.items()]
 
         for row in rows:
             print(rows)

@@ -1,12 +1,14 @@
 import django.forms as forms
-from prettyjson import PrettyJSONWidget
+import os
 from . import models
 
-from components.readers import CSVReader
+from components.readers import CSVReader, VCFReader
+
+MAX_LEN = int(os.environ.get('BATCH_SIZE'))
+SIZE_ALERT = "Up to a maximum of {} rows are allowed!".format(MAX_LEN) if MAX_LEN > 0 else ""
 
 
 class QueryForm(forms.ModelForm):
-
     csv_file = forms.FileField(label="Upload a csv file with your queries:",
                                required=False,
                                help_text='CSV file with 5 columns: chromosome, position, variant_reference, '
@@ -19,14 +21,28 @@ class QueryForm(forms.ModelForm):
                                          '1,69869,T,A,hg19</br>'
                                          '1,881918,G,A,hg19</br>'
                                          '...</br>'
-                                         'Up to a maximum of 25 rows are allowed!',
+                                         '{}'.format(SIZE_ALERT),
                                )
 
     csv_label = forms.CharField(max_length=50, required=False,
                                 label='Label:',
                                 help_text='All queries will have the same label')
-    
 
+    vcf_file = forms.FileField(label="Upload a vcf file with your queries:",
+                               required=False,
+                               help_text='VCF file '
+                                         '</br>'
+                                         '{}'.format(SIZE_ALERT),
+                               )
+
+    vcf_label = forms.CharField(max_length=50, required=False,
+                                label='Label:',
+                                help_text='All queries will have the same label')
+
+    vcf_assembly = forms.ChoiceField(required=False,
+                                     label='Assembly:',
+                                     choices=models.QueryModel.ASSEMBLY_CHOICE,
+                                     help_text='Assembly')
 
     class Meta:
         model = models.QueryModel
@@ -34,7 +50,9 @@ class QueryForm(forms.ModelForm):
         fields = ['label', 'chromosome', 'position', 'assembly', 'variant_ref',
                   'variant_alt', 'query', 'result', 'previous', 'difference',
                   'date', 'update', 'fields',
-                  'csv_file', 'csv_label']
+                  'csv_file', 'csv_label',
+                  'vcf_file', 'vcf_label', 'vcf_assembly',
+                  ]
 
         labels = {
             'label': 'Label',
@@ -62,9 +80,12 @@ class QueryForm(forms.ModelForm):
 
         csv_file = self.cleaned_data.get('csv_file')
         csv_label = self.cleaned_data.get('csv_label')
+        vcf_file = self.cleaned_data.get('vcf_file')
+        vcf_label = self.cleaned_data.get('vcf_label')
+        vcf_assembly = self.cleaned_data.get('vcf_assembly')
         label = self.cleaned_data.get('label')
         position = self.cleaned_data.get('position')
-        sources =self.cleaned_data.get('sources')
+        sources = self.cleaned_data.get('sources')
 
         if csv_file and not csv_label:
             msg = forms.ValidationError("This field is required.")
@@ -74,6 +95,14 @@ class QueryForm(forms.ModelForm):
             msg = forms.ValidationError("This field is required.")
             self.add_error('csv_file', msg)
 
+        if vcf_file and not vcf_label:
+            msg = forms.ValidationError("This field is required.")
+            self.add_error('vcf_label', msg)
+
+        if vcf_label and not vcf_file:
+            msg = forms.ValidationError("This field is required.")
+            self.add_error('vcf_file', msg)
+
         if csv_file and csv_label:
             _csv = CSVReader(csv_file)
             if not _csv.is_valid():
@@ -82,7 +111,15 @@ class QueryForm(forms.ModelForm):
                     msg = forms.ValidationError(error)
                     self.add_error('csv_file', msg)
 
-        if not csv_file and (not label or not position):
+        if vcf_file and vcf_label:
+            _vcf = VCFReader(vcf_file)
+            if not _vcf.is_valid():
+
+                for error in _vcf.get_errors():
+                    msg = forms.ValidationError(error)
+                    self.add_error('vcf_file', msg)
+
+        if not csv_file and not vcf_file and (not label or not position):
             msg = forms.ValidationError("This field is required.")
             if not label:
                 self.add_error('label', msg)

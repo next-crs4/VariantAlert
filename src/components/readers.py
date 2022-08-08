@@ -1,11 +1,48 @@
+import os
 import csv
+import vcf
 import codecs
 
-MAX_LEN = 25
+MAX_LEN = int(os.environ.get('BATCH_SIZE'))
 FIELDNAMES = ('chromosome', 'position', 'variant_reference',
               'variant_alternate', 'assembly')
 AGCT = ['A', 'G', 'C', 'T']
 ASS = ['hg19', 'hg38']
+
+
+class VCFReader(vcf.Reader):
+    def __init__(self, f):
+        self.errors = list()
+        self.content = self.__validate(f)
+
+    def __validate(self, f):
+        try:
+            content = vcf.Reader(codecs.iterdecode(f, 'utf-8'))
+            rows = list(content)
+
+            if 0 < MAX_LEN < len(rows):
+                self.__set_error("VCF file must have a maximum of {} variants".format(MAX_LEN))
+
+        except Exception as e:
+            self.__set_error(e)
+
+        return vcf.Reader(codecs.iterdecode(f, 'utf-8')) if self.is_valid() else None
+
+    def __set_error(self, msg):
+        self.errors.append(msg)
+
+    def is_valid(self):
+        return False if self.errors else True
+
+    def get_errors(self):
+        return list(set(self.errors))
+
+    def get_content(self):
+        return [dict(chromosome=r.CHROM,
+                     position=r.POS,
+                     variant_reference=r.REF,
+                     variant_alternate=r.ALT,
+                     ) for r in self.content]
 
 
 class CSVReader(csv.DictReader):
@@ -22,8 +59,8 @@ class CSVReader(csv.DictReader):
                                      delimiter=',')
             rows = list(content)
 
-            if len(rows) > MAX_LEN:
-                self.__set_error("CSV file must have a maximum of 25 lines")
+            if 0 < MAX_LEN < len(rows):
+                self.__set_error("CSV file must have a maximum of {} lines".format(MAX_LEN))
 
             for row in rows:
                 if len(row) != 5:

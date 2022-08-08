@@ -2,6 +2,7 @@ FROM python:3.8
 
 ARG USER_ID
 ARG GROUP_ID
+ARG BATCH_SIZE
 
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /code
@@ -27,4 +28,4 @@ RUN groupadd -g ${GROUP_ID} appuser && \
 
 USER appuser
 
-
+ENV  BATCH_SIZE="${BATCH_SIZE}"

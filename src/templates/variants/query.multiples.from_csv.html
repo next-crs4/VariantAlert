@@ -1,4 +1,4 @@
- <!-- templates/variants/query.multiples.html -->
+ <!-- templates/variants/query.multiples.from_csv.html -->
 <div class="center py-3 px-4 bg-default" >
     <div class="row">
         <div class="form-group col-sm-4">
@@ -41,8 +41,9 @@
     </div>
 </div>
 <script>
-$(".custom-file-input").on("change", function() {
+$("#{{ form.csv_file.id_for_label }}").on("change", function() {
   var fileName = $(this).val().split("\\").pop();
+  console.log(fileName);
   $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
 });
 </script>

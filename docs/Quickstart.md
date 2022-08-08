@@ -19,6 +19,7 @@ $ make EMAIL_HOST=smtp.yourserver.com \
     EMAIL_PASSWORD=your-email-account-password \
     EMAIL_PORT=your-server-port \
     HOST=0.0.0.0 \
+    BATCH_SIZE=25 \
   start-local
 ```
 
@@ -39,6 +40,7 @@ $ make EMAIL_HOST=smtp.yourserver.com \
     EMAIL_PASSWORD=your-email-account-password \
     EMAIL_PORT=your-server-port \
     HOST=your-variantalert-site.com \
+    BATCH_SIZE=25 \
   start-prod
 ```
 
@@ -68,27 +70,38 @@ $ make help
 
 ===================================================================================================
 
-VariantAlert - a tool to notify updates in genetic variant annotations
-https://github.com/next-crs4/VariantAlert
+ VariantAlert - a tool to notify updates in genetic variant annotations
+ https://github.com/next-crs4/VariantAlert
  
-Please use `make [options] <target>` where <target> is one of
-  start-local             bring up the variant-alert app in your local/develop environment (0.0.0.0)
-  start-prod              bring up the variant-alert app in production environment (with ssl)
-  stop                    bring down the variant-alert app
-  clean                   remove the variant-alert app from your computer
-  
-variant-alert will be deployed into ~/variant-alert
-To set a different path, digit: 
+ Please use `make [options] <target>` where <target> is one of
+                start-local             bring up the variant-alert app in your local/develop environment (0.0.0.0)
+                start-prod              bring up the variant-alert app in production environment (with ssl)
+                stop                    bring down the variant-alert app
+                clean                   remove the variant-alert app from your computer
+ 
+ options:
+        VARIANT_ALERT_ROOT              deployment path (default: ~/variant-alert)
+        EMAIL_HOST                      email host server (default: smtp.yourserver.com)
+        EMAIL_USER                      email username (default: your@yourserver.com)
+        EMAIL_PASSWORD                  email password (default: your-email-account-password)
+        HOST                            variant alert host (default: 0.0.0.0)
+        BATCH_SIZE                      number of variants for batch (default: 25)
+                                        set zero to have no limitations
+ 
+ variant-alert will be deployed into ~/variant-alert
+ To set a different path, digit: 
   make VARIANT_ALERT_ROOT=/your/path [options] start-*
   
-Remember to configure your EMAIL_HOST: 
-  make   EMAIL_HOST=smtp.yourserver.com \
-         EMAIL_USER=your@yourserver.com \
-         EMAIL_PASSWORD=your-email-account-password [options] start-*
+ Remember to configure your EMAIL_HOST: 
+        make  EMAIL_HOST=smtp.yourserver.com \
+              EMAIL_USER=your@yourserver.com \
+              EMAIL_PASSWORD=your-email-account-password [options] start-*
   
-For production environment, configure HOST
-  make HOST=example.com [options] start-*
+ For production environment, configure HOST
+        make    HOST=example.com [options] start-*
  
-Docs: https://next-crs4.github.io/VariantAlert/ 
+ Docs: https://next-crs4.github.io/VariantAlert
+ 
+
 
 ```
