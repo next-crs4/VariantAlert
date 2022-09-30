@@ -46,7 +46,7 @@ This is the page where users are automatically redirected after login.
 Variant Alert offers users two ways to submit their variants to keep under control:
 
 - **Single** mode: the user can fill the form one variant at a time
-- **Multiple** mode: upload of a PDF or CSV file containing multiple variants
+- **Multiple** mode: upload of a VCF or CSV file containing multiple variants
 
 In any case, for each query the user must enter the following mandatory fields in order  
 to uniquely identify the variants:
@@ -69,15 +69,16 @@ the **Details** page with the results of the query.
 ### Multiple Mode
 
 ####  From CSV file
-![Multple Mode from CSV]({{ 'assets/images/add_new_multiple_csv.png' | site_relative }})
+![Multiple Mode from CSV]({{ 'assets/images/add_new_multiple_csv.png' | site_relative }})
 
 In this case, the label will be the same for all the variants.
 An example csv file is available [here]({{ 'assets/files/ex_multiple_mode.csv' | site_relative }}).
+
 After successfully submitting, the user will be redirected to the **History** 
 page with the list of the submitted variants.
 
-####  From PDF file
-![Multple Mode from PDF]({{ 'assets/images/add_new_multiple_csv.png' | site_relative }})
+####  From VCF file
+![Multiple Mode from VCF]({{ 'assets/images/add_new_multiple_vcf.png' | site_relative }})
 
 Again, the label will be the same for all the variants.
 After successfully submitting, the user will be redirected to the **History** 
