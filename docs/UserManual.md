@@ -113,9 +113,7 @@ Display only variants with an updated annotation since the last login.
 ## Details
 This page shows variant details and results of the query.
 
-![Details 1]({{ 'assets/images/details_1.png' | site_relative }})
-
-![Details 2]({{ 'assets/images/details_2.png' | site_relative }})
+![Details 1]({{ 'assets/images/details.png' | site_relative }})
 
 
 ## Download
