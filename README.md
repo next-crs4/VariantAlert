@@ -23,4 +23,7 @@ See [docker-compose docs](https://docs.docker.com/compose/reference/overview/)
 2. [User Manual]( https://next-crs4.github.io/VariantAlert/UserManual.html)
 
 ## How to cite VariantAlert
-To reference VariantAlert in your work, please cite the "http://variant-alert.crs4.it" URL.
+To reference VariantAlert in your work, please cite:
+
+Atzeni, R., Massidda, M., Fotia, G., & Uva, P. (2022). 
+*VariantAlert: A web-based tool to notify updates in genetic variant annotations.* Human Mutation, 1– 8. [https://doi.org/10.1002/humu.24495](https://doi.org/10.1002/humu.24495)
